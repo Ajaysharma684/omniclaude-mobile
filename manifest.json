@@ -1,6 +1,7 @@
 {
   "name": "OmniClaude Mobile",
   "short_name": "OmniClaude",
+  "description": "Multi-model AI coding workspace, exam study guide generator, and multi-PDF analyzer with smart auto-routing.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -8,10 +9,16 @@
   "theme_color": "#0d0d0f",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
