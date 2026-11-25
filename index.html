@@ -1,820 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="dark"><head><script data-bard-client-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
-        window.__firebase_config = firebaseConfig;
-        window.__initial_auth_token = initialAuthToken;
-        window.__app_id = appId;
-            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjExNjRiNzdiNDMzZDdhMDAyMWI4NjE4YjhjYTU3ZTMyZGI5MWUxMTMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwNjczMDg2MTkwOTIxNDc5MDEwNiIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjX2FhYzBjMTQ0Y2RjYjg4ODNfb21uaWNsYXVkZV9tb2JpbGUuaHRtbC0xNTIifSwiZXhwIjoxNzk1NTM5MjYwLCJpYXQiOjE3OTU1MzU2NjAsImFsZyI6IlJTMjU2In0.QOtQlMxf4VZvDHRALxm35bgqck02mRqeTi0eN17lUb9GRM5Vmo3fpO9exB9MyYKStx_vT8cBoQ7lujE_L-7P6uOASZRkDslRJSDYach34qlFdiGmm9X0ZO0zwHUJNWswFM4cPEza99skG9UphOMFYnbSAtVIkZ43go3ARCcoJdQqnVnQAgc7ApxCMA3Wrl-YDDcAtbnIlvpdiCOolDlF2imuHdl_zAuIiaVYe9v4Pjud8JOBhHutEWzDznn-YnHnI0aYAnvnjR1YskCzzXWDR-MvH7x75AAiLRiZNTmX4wkofUJZGac0TZ_NWIk1yLjXP7AaoWMzaBYmuNmHlEqq0A","c_aac0c144cdcb8883_omniclaude_mobile.html-152")</script><script data-bard-client-injected="true">
-  document.addEventListener('input', (event) => {
-    if (event.target && (event.target.isContentEditable || event.target.hasAttribute('contenteditable'))) {
-      const clonedDoc = document.cloneNode(true);
-      const injectedScripts = clonedDoc.querySelectorAll('[data-bard-client-injected="true"]');
-      injectedScripts.forEach(el => el.remove());
-      window.parent.postMessage({
-        type: 'inlineEdit',
-        html: '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML
-      }, '*');
-    }
-  });
-</script><script data-bard-client-injected="true">(function(){'use strict';window.addEventListener("message",a=>{a.data&&a.data.type==="SUPPLEMENTAL_DATA_UPDATE"&&window.dispatchEvent(new CustomEvent("supplementaldataupdate",{detail:a.data.data}))});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const SCROLL_KEYS = new Set([
-    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-    ' ', 'Spacebar', 'PageUp', 'PageDown', 'Home', 'End',
-  ]);
-  const HORIZONTAL_KEYS = new Set(['ArrowLeft', 'ArrowRight']);
-
-  function isTextEntryTarget(target) {
-    if (!target) return false;
-    const tagName = target.tagName;
-    return tagName === 'INPUT' || tagName === 'TEXTAREA' ||
-        tagName === 'SELECT' || target.isContentEditable === true;
-  }
-
-  // An element absorbs the key only if it both overflows on the axis being
-  // scrolled and is configured to scroll on that axis. The cheap dimension
-  // test runs first because getComputedStyle forces a style recalc, and this
-  // runs on every keypress. Each axis is read from its own longhand: the
-  // 'overflow' shorthand serializes as two values when the axes differ, which
-  // is the common 'overflow-x: hidden; overflow-y: auto' pane.
-  function canScroll(node, horizontal) {
-    const overflows = horizontal ? node.scrollWidth > node.clientWidth
-                                 : node.scrollHeight > node.clientHeight;
-    if (!overflows) return false;
-    const style = window.getComputedStyle(node);
-    const overflow = horizontal ? style.overflowX : style.overflowY;
-    return overflow === 'auto' || overflow === 'scroll';
-  }
-
-  // Walks up from the event target so nested scrollers keep their behavior.
-  // <body> is included because pages that pin the root height make it the
-  // scroll container.
-  function hasScrollableAncestor(target, horizontal) {
-    let node = target;
-    while (node && node !== document.documentElement) {
-      if (canScroll(node, horizontal)) return true;
-      node = node.parentElement;
-    }
-    return false;
-  }
-
-  function rootCanScroll(horizontal) {
-    const scroller = document.scrollingElement || document.documentElement;
-    if (!scroller) return false;
-    // Tolerate a pixel of rounding so subpixel layouts do not look scrollable.
-    return horizontal ? scroller.scrollWidth > window.innerWidth + 1
-                      : scroller.scrollHeight > window.innerHeight + 1;
-  }
-
-  window.addEventListener('keydown', function(event) {
-    if (!SCROLL_KEYS.has(event.key)) return;
-    if (event.defaultPrevented) return;
-    // Alt and Meta turn arrows into browser history navigation, and Ctrl is
-    // reserved for shortcuts, so none of them are scroll intent.
-    if (event.altKey || event.metaKey || event.ctrlKey) return;
-
-    const target = event.target;
-    if (isTextEntryTarget(target)) return;
-
-    // Anything that can still absorb the scroll gets to keep it.
-    const horizontal = HORIZONTAL_KEYS.has(event.key);
-    if (rootCanScroll(horizontal)) return;
-    if (hasScrollableAncestor(target, horizontal)) return;
-
-    event.preventDefault();
-  }, {capture: true, passive: false});
-})();</script><script data-bard-client-injected="true">(function() {
-  // Ensure this script is executed only once
-  if (window.firebaseAuthBridgeScriptLoaded) {
-    return;
-  }
-  window.firebaseAuthBridgeScriptLoaded = true;
-
-  let nextTokenPromiseId = 0;
-
-  // Stores { resolve, reject } for ongoing token requests
-  const pendingTokenPromises = {};
-
-  // Listen for messages from the Host Application
-  window.addEventListener('message', function(event) {
-
-    const messageData = event.data;
-
-  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
-      const { success, token, error, promiseId } = messageData ?? {};
-      if (pendingTokenPromises[promiseId]) {
-        if (success) {
-          pendingTokenPromises[promiseId].resolve(token);
-        } else {
-          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
-        }
-        delete pendingTokenPromises[promiseId];
-      }
-    }
-  });
-
-  // Expose a function for the Generated App to request a new Firebase token
-  window.requestNewFirebaseToken = function() {
-    const currentPromiseId = nextTokenPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingTokenPromises[currentPromiseId] = { resolve, reject };
-    });
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({
-        type: 'REQUEST_NEW_FIREBASE_TOKEN',
-        promiseId: currentPromiseId
-      }, '*');
-    } else {
-      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
-      delete pendingTokenPromises[currentPromiseId];
-    }
-    return promise;
-  };
-})();</script><script data-bard-client-injected="true">
-let realOriginalGetUserMedia = null;
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-}
-
-(function() {
-  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
-    try {
-      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
-        get: function() {
-          return undefined; // Or throw an error
-        },
-        configurable: false
-      });
-    } catch (error) {
-      console.error("Error defining prototype getter:", error);
-    }
-  }
-})();
-
-(function() {
-  const pendingMediaResolvers = {};
-  let nextMediaPromiseId = 0;
-
-  function requestMediaPermissions(constraints) {
-    const mediaPromiseId = nextMediaPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingMediaResolvers[mediaPromiseId] = (granted) => {
-        delete pendingMediaResolvers[mediaPromiseId];
-        resolve(granted);
-      };
-    });
-
-    window.parent.postMessage({
-      type: 'requestMediaPermission',
-      constraints: constraints,
-      promiseId: mediaPromiseId,
-    }, '*');
-
-    return promise;
-  }
-
-  let originalGetUserMedia = realOriginalGetUserMedia;
-
-  function interceptGetUserMedia() {
-    if (navigator.mediaDevices) {
-      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
-        value: function(constraints) {
-          return requestMediaPermissions(constraints).then((granted) => {
-            if (granted) {
-              if (originalGetUserMedia) {
-                return originalGetUserMedia(constraints);
-              } else {
-                throw new Error("Original getUserMedia not available.");
-              }
-            } else {
-              throw new DOMException('Permission denied', 'NotAllowedError');
-            }
-          });
-        },
-        writable: false,
-        configurable: false
-      });
-    }
-  }
-
-  interceptGetUserMedia();
-
-  const observer = new MutationObserver(function(mutationsList, observer) {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'childList' && mutation.addedNodes) {
-        mutation.addedNodes.forEach(node => {
-          if (node === navigator.mediaDevices) {
-            interceptGetUserMedia();
-          }
-        });
-      }
-    }
-  });
-
-  function interceptSpeechRecognition() {
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      return;
-    }
-
-    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    const SpeechRecognitionWrapper = function(...args) {
-      const recognizer = new OriginalSpeechRecognition(...args);
-      const originalStart = recognizer.start.bind(recognizer);
-
-      recognizer.start = function() {
-        requestMediaPermissions({ audio: true }).then(granted => {
-          if (granted) {
-            originalStart();
-          } else {
-            const errorEvent = new SpeechRecognitionErrorEvent('error');
-            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
-            recognizer.dispatchEvent(errorEvent);
-          }
-        });
-      };
-
-      return recognizer;
-    };
-
-    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
-    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
-
-    if (window.SpeechRecognition) {
-      window.SpeechRecognition = SpeechRecognitionWrapper;
-    }
-    if (window.webkitSpeechRecognition) {
-      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
-    }
-  }
-
-  interceptSpeechRecognition();
-
-  window.addEventListener('message', function(event) {
-    if (event.data) {
-      if (event.data.type === 'resolveMediaPermission') {
-        const { promiseId, granted } = event.data;
-        if (pendingMediaResolvers[promiseId]) {
-          pendingMediaResolvers[promiseId](granted);
-        }
-      }
-    }
-  });
-
-})();</script><script ws-interception-config="{&quot;parentOrigin&quot;:&quot;https://gemini.google.com&quot;,&quot;proxiedDomains&quot;:[]}" data-bard-client-injected="true">(function(){'use strict';var u=typeof Object.defineProperties=="function"?Object.defineProperty:function(b,d,e){if(b==Array.prototype||b==Object.prototype)return b;b[d]=e.value;return b};function v(b){b=["object"==typeof globalThis&&globalThis,b,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var d=0;d<b.length;++d){var e=b[d];if(e&&e.Math==Math)return e}throw Error("Cannot find global object");}var w=v(this);
-function y(b,d){if(d)a:{var e=w;b=b.split(".");for(var h=0;h<b.length-1;h++){var k=b[h];if(!(k in e))break a;e=e[k]}b=b[b.length-1];h=e[b];d=d(h);d!=h&&d!=null&&u(e,b,{configurable:!0,writable:!0,value:d})}}function z(b){function d(h){return b.next(h)}function e(h){return b.throw(h)}return new Promise(function(h,k){function m(n){n.done?h(n.value):Promise.resolve(n.value).then(d,e).then(m,k)}m(b.next())})}y("globalThis",function(b){return b||w});/*
-
- Copyright The Closure Library Authors.
- SPDX-License-Identifier: Apache-2.0
-*/
-function A(b,d){function e(){}e.prototype=d.prototype;b.i=d.prototype;b.prototype=new e;b.prototype.constructor=b;b.h=function(h,k,m){for(var n=Array(arguments.length-2),p=2;p<arguments.length;p++)n[p-2]=arguments[p];return d.prototype[k].apply(h,n)}};function B(b,d,e="*"){function h(a){if(typeof a==="string")return F.encode(a).buffer;if(a instanceof ArrayBuffer)return a.slice(0);if(ArrayBuffer.isView(a))return a.buffer.slice(a.byteOffset,a.byteOffset+a.byteLength);throw Error("Invalid data type");}function k(a){a=h(a);var f={type:"send",data:new Uint8Array(a)},g;(g=r)==null||g.postMessage(f,[a])}function m(){if(!r)throw Error("Data port not captured yet.");r.onmessage=a=>{if(a.data.type==="message"){a=new MessageEvent("message",{data:G.decode(a.data.data)});
-let f;(f=c.onmessage)==null||f.call(c,a);c.dispatchEvent(a)}}}function n(){if(!t)throw Error("Control port not captured yet.");t.onmessage=a=>{switch(a.data.type){case "open":l=1;var f=new Event("open"),g;(g=c.onopen)==null||g.call(c,f);c.dispatchEvent(f);q.forEach(H=>{k(H)});q=[];break;case "close":g=a.data;l=3;g=new CloseEvent("close",{code:g.code,reason:g.reason,wasClean:g.wasClean});(f=c.onclose)==null||f.call(c,g);c.dispatchEvent(g);break;case "error":l=3;f=new Event("error");let x;(x=c.onerror)==
-null||x.call(c,f);c.dispatchEvent(f)}}}function p(a){return z(function*(){var f=new MessageChannel;t=f.port1;var g=new MessageChannel;r=g.port1;n();m();window.parent.postMessage({type:"websocket_open",portOrdering:["control","data"],url:b,protocols:a||[],connectionId:I},e,[f.port2,g.port2])}())}var c=Reflect.construct(EventTarget,[],new.target);c.CONNECTING=0;c.OPEN=1;c.CLOSING=2;c.CLOSED=3;c.url=b;c.binaryType="arraybuffer";c.protocol="";c.extensions="";var l=0,t=null,r=null,q=[],F=new TextEncoder,
-G=new TextDecoder;c.onopen=null;c.onmessage=null;c.onclose=null;c.onerror=null;Object.defineProperty(c,"readyState",{get:()=>l,enumerable:!0,configurable:!0});Object.defineProperty(c,"bufferedAmount",{get:()=>{var a=0;q.forEach(f=>{a+=typeof f==="string"?f.length:f.byteLength});return a},enumerable:!0,configurable:!0});var I=function(){var a;return((a=globalThis.crypto)==null?0:a.randomUUID)?globalThis.crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,f=>{var g=Math.random()*
-16|0;return(f==="x"?g:g&3|8).toString(16)})}();c.send=a=>{if(l===1)a instanceof Blob?a.arrayBuffer().then(f=>{k(f)}):k(a);else if(l===0)if(typeof a==="string")q.push(a);else if(a instanceof ArrayBuffer||ArrayBuffer.isView(a))q.push(h(a));else throw Error("Sending Blob is not supported before the connection is open.");else console.debug("WebSocket send called in CLOSING or CLOSED state; ignored.")};c.close=(a=1E3,f="")=>{if(l!==2&&l!==3){l=2;a={type:"close",code:a,reason:f,wasClean:a===1E3};var g;
-(g=t)==null||g.postMessage(a)}};Promise.resolve().then(()=>p(d));return c}A(B,EventTarget);var C=document.currentScript,D=C==null?void 0:C.getAttribute("ws-interception-config");if(!D)throw Error("WebSocket Interceptor: Missing ws-interception-config attribute in the script tag.");var E=JSON.parse(D);if(!E.parentOrigin||typeof E.parentOrigin!=="string")throw Error("WebSocket Interceptor: Invalid parentOrigin in ws-interception-config");
-(function(b){var d=Object.getOwnPropertyDescriptor(window,"WebSocket");if(!d||d.writable||d.configurable)d=Object.assign(function(e,h){try{let k=(new URL(e)).hostname;if(b.proxiedDomains.some(m=>k===m||k.endsWith(`.${m}`)))return new B(e,h,b.parentOrigin)}catch(k){throw window.parent.postMessage({type:"websocket_blocked",url:e,reason:"blocked_invalid_url"},b.parentOrigin),new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");}window.parent.postMessage({type:"websocket_blocked",
-url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");},{CONNECTING:0,OPEN:1,CLOSING:2,CLOSED:3}),Object.defineProperty(window,"WebSocket",{value:d,writable:!1,configurable:!1})})({proxiedDomains:E.proxiedDomains||[],parentOrigin:E.parentOrigin});}).call(this);
-</script><script data-bard-client-injected="true">((function(modelInformation) {
-  const originalFetch = window.fetch;
-  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
-  let googleLlmBaseApiUrls = [
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
-  ];
-  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-    );
-  });
-  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedGenerateImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedImageTransformModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-
-  const pendingFetchResolvers = {};
-  let nextPromiseId = 0;
-
-  function handleStringInput(input, optionsArgument) {
-    const actualUrl = input;
-    const fetchCallArgs = [actualUrl, optionsArgument];
-    const effectiveOptions = optionsArgument || {};
-    const bodyForApiKeyCheck = effectiveOptions.body;
-    const bodyForPostMessage = effectiveOptions.body;
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  function handleRequestInput(input, optionsArgument) {
-    const actualUrl = input.url;
-    const fetchCallArgs = [input, optionsArgument];
-    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (optionsArgument) {
-      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
-      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
-      if ('body' in optionsArgument) {
-        bodyForApiKeyCheck = optionsArgument.body;
-        bodyForPostMessage = optionsArgument.body;
-      } else {
-        bodyForApiKeyCheck = undefined;
-        bodyForPostMessage = input.body;
-      }
-    } else {
-      bodyForApiKeyCheck = undefined;
-      bodyForPostMessage = input.body;
-    }
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  window.fetch = function(input, optionsArgument) {
-    let actualUrl;
-    let fetchCallArgs;
-    let effectiveOptions = {};
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (typeof input === 'string') {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
-    } else if (input instanceof Request) {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
-    } else {
-      return originalFetch.apply(window, [input, optionsArgument]);
-    }
-
-    effectiveOptions.method = effectiveOptions.method || 'GET';
-    if (!effectiveOptions.headers) {
-      effectiveOptions.headers = new Headers();
-    }
-
-
-    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
-      let apiKeyIsNull = true;
-
-      const regex = new RegExp("models/([^:]+)");
-      const modelNameMatch = actualUrl.match(regex);
-      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
-
-
-      try {
-        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
-        const apiKeyParam = urlObject.searchParams.get('key');
-        if (apiKeyParam) {
-          apiKeyIsNull = false;
-        }
-      } catch (e) {
-        // Continue checks even if URL parsing fails
-      }
-
-      if (apiKeyIsNull && effectiveOptions.headers) {
-        const h = new Headers(effectiveOptions.headers);
-        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
-        if (apiKeyHeaderValue) {
-          apiKeyIsNull = false;
-          return originalFetch.apply(window, fetchCallArgs);
-        }
-      }
-
-      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
-        try {
-          const bodyData = JSON.parse(bodyForApiKeyCheck);
-          if (bodyData && bodyData.apiKey) {
-            apiKeyIsNull = false;
-            return originalFetch.apply(window, fetchCallArgs);
-          }
-        } catch (e) {
-          // Ignore JSON parsing errors
-        }
-      }
-
-      if(apiKeyIsNull) {
-        const promiseId = nextPromiseId++;
-        const promise = new Promise((resolve) => {
-          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
-            delete pendingFetchResolvers[promiseId];
-            resolve(resolvedResponse);
-          };
-        });
-
-        let serializedBodyForPostMessage;
-        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
-            serializedBodyForPostMessage = bodyForPostMessage;
-        } else if (bodyForPostMessage instanceof ReadableStream) {
-            serializedBodyForPostMessage = null;
-        } else {
-            try {
-                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
-            } catch (e) {
-                serializedBodyForPostMessage = null;
-            }
-        }
-
-        const messageOptions = {
-            method: effectiveOptions.method,
-            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
-            body: serializedBodyForPostMessage
-        };
-
-        window.parent.postMessage({
-          type: 'requestFetch',
-          url: actualUrl,
-          modelName: modelName,
-          options: messageOptions,
-          promiseId: promiseId,
-        }, '*');
-
-        return promise;
-      }
-      return originalFetch.apply(window, fetchCallArgs);
-    }
-    return originalFetch.apply(window, fetchCallArgs);
-  };
-
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'resolveFetch') {
-      const { promiseId, response } = event.data;
-      if (pendingFetchResolvers[promiseId]) {
-        try {
-          const reconstructedResponse = new Response(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: new Headers(response.headers),
-          });
-          pendingFetchResolvers[promiseId](reconstructedResponse);
-        } catch (error) {
-          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
-        }
-      }
-    }
-  });
-
-}))({"textModelName":"gemini-3-flash-preview","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-3.1-flash-image","imageTransformModelName":"gemini-3-pro-image","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20","gemini-2.5-flash-preview-09-2025"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"],"deprecatedGenerateImageModelNames":["gemini-2.5-flash-image-preview","gemini-2.5-flash-image","gemini-3.1-flash-image-preview"],"deprecatedImageTransformModelNames":["gemini-3-pro-image-preview-11-2025"]})</script><script data-bard-client-injected="true">(function() {
-  const OVERLAY_SELECTOR =
-    'dialog[open], [role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [role="combobox"]';
-
-  function isVisibleOverlay(element) {
-    if (element.closest('[hidden], [aria-hidden="true"], [inert]')) {
-      return false;
-    }
-    if (window.getComputedStyle(element).visibility === 'hidden') {
-      return false;
-    }
-    for (let cur = element; cur; cur = cur.parentElement) {
-      if (window.getComputedStyle(cur).display === 'none') {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function hasOpenOverlay() {
-    const candidates = document.querySelectorAll(OVERLAY_SELECTOR);
-    for (let i = 0; i < candidates.length; i++) {
-      if (isVisibleOverlay(candidates[i])) {
-        return true;
-      }
-    }
-    try {
-      if (document.querySelector('[popover]:popover-open')) {
-        return true;
-      }
-    } catch (e) {
-      // Ignore engines that do not support :popover-open.
-    }
-    return false;
-  }
-
-  function isNonEmptySearchInput(target) {
-    return (
-      Boolean(target) &&
-      target.tagName === 'INPUT' &&
-      typeof target.type === 'string' &&
-      target.type.toLowerCase() === 'search' &&
-      typeof target.value === 'string' &&
-      target.value.length > 0
-    );
-  }
-
-  function shouldIgnoreEscape(event) {
-    return (
-      event.key !== 'Escape' ||
-      event.altKey ||
-      event.ctrlKey ||
-      event.metaKey ||
-      event.shiftKey ||
-      event.isComposing ||
-      event.repeat ||
-      event.keyCode === 229 ||
-      isNonEmptySearchInput(event.target)
-    );
-  }
-
-  let shouldIgnoreCaptureState = false;
-
-  window.addEventListener(
-    'keydown',
-    function(event) {
-      if (event.key === 'Escape') {
-        shouldIgnoreCaptureState =
-          hasOpenOverlay() || isNonEmptySearchInput(event.target);
-      }
-    },
-    {capture: true},
-  );
-
-  window.addEventListener('keydown', function(event) {
-    if (
-      shouldIgnoreEscape(event) ||
-      event.defaultPrevented ||
-      shouldIgnoreCaptureState
-    ) {
-      return;
-    }
-    const wasBlockedOnCapture = shouldIgnoreCaptureState;
-    queueMicrotask(function() {
-      if (event.defaultPrevented || wasBlockedOnCapture) {
-        return;
-      }
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({'type': 'escapeKey'}, '*');
-      }
-    });
-  });
-})();</script><script data-bard-client-injected="true">(function() {
-  function normalizeSlug(str) {
-    try {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^p{L}p{N}s_-]/gu, '')
-        .replace(/s+/g, '-');
-    } catch (e) {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9s_-]/g, '')
-        .replace(/s+/g, '-');
-    }
-  }
-
-  function findTargetElement(hash) {
-    if (!hash || hash === '#') {
-      return null;
-    }
-    const rawId = hash.startsWith('#') ? hash.slice(1) : hash;
-    let decodedId = rawId;
-    try {
-      decodedId = decodeURIComponent(rawId);
-    } catch (e) {
-      // Ignore URI malformed errors.
-    }
-
-    // 1. Direct ID match (raw and decoded).
-    let target = document.getElementById(rawId) || document.getElementById(decodedId);
-    if (target) {
-      return target;
-    }
-
-    // 2. Name attribute match (<a name="...">).
-    try {
-      if (typeof CSS !== 'undefined' && CSS.escape) {
-        target =
-          document.querySelector('[name="' + CSS.escape(rawId) + '"]') ||
-          document.querySelector('[name="' + CSS.escape(decodedId) + '"]');
-      } else {
-        const namedElements = document.getElementsByName(rawId);
-        if (namedElements && namedElements.length > 0) {
-          return namedElements[0];
-        }
-      }
-    } catch (e) {
-      // Ignore querySelector syntax errors.
-    }
-    if (target) {
-      return target;
-    }
-
-    // 3. Match heading text by slug (for Markdown TOCs where headings lack explicit IDs).
-    const targetSlug = normalizeSlug(decodedId);
-    if (targetSlug) {
-      for (const heading of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
-        if (normalizeSlug(heading.textContent || '') === targetSlug) {
-          return heading;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  document.addEventListener('click', function(event) {
-    const target = event.target;
-    const anchor = target && typeof target.closest === 'function' ? target.closest('a') : null;
-    if (!anchor) {
-      return;
-    }
-
-    const href = anchor.getAttribute('href');
-    if (
-      !href ||
-      href.trim().toLowerCase().startsWith('javascript:') ||
-      anchor.hasAttribute('download')
-    ) {
-      return;
-    }
-
-    // Check if the link is an in-page hash / anchor link.
-    if (href.startsWith('#')) {
-      event.preventDefault();
-      const targetElement = findTargetElement(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-      return;
-    }
-
-    // Check if the URL has the same origin/pathname but with a hash.
-    try {
-      const url = new URL(anchor.href, window.location.href);
-      if (
-        url.hash &&
-        url.origin === window.location.origin &&
-        url.pathname === window.location.pathname
-      ) {
-        event.preventDefault();
-        const targetElement = findTargetElement(url.hash);
-        if (targetElement) {
-          targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-        return;
-      }
-    } catch (e) {
-      // Fall through if URL parsing fails.
-    }
-
-    // For all external or full navigation links, prevent iframe-level navigation
-    // (which breaks in AGSA WebView or sandboxed iframes) and ensure they open
-    // safely in a new tab/window.
-    if (anchor.target !== '_blank') {
-      event.preventDefault();
-      window.open(anchor.href, '_blank', 'noopener,noreferrer');
-    }
-  }, {capture: true});
-})();</script><script data-bard-client-injected="true">(function(){'use strict';function a(){window.parent.postMessage({type:"interaction"},"*")}window.addEventListener("click",a,{capture:!0,passive:!0});window.addEventListener("touchstart",a,{capture:!0,passive:!0});window.addEventListener("keydown",a,{capture:!0,passive:!0});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const originalConsoleLog = console.log;
-  const originalConsoleError = console.error;
-
-    /**
-   * Normalizes an error event or a promise rejection reason into a structured error object.
-   * @param {*} errorEventOrReason The error object or reason.
-   * @return {object} Structured error data { message, name, stack }.
-   */
-  function getErrorObject(errorEventOrReason) {
-    if (errorEventOrReason instanceof Error) {
-      return {
-        message: errorEventOrReason.message,
-        name: errorEventOrReason.name,
-        stack: errorEventOrReason.stack,
-      };
-    }
-    // Fallback for non-Error objects.
-    try {
-      return {
-        message: JSON.stringify(errorEventOrReason),
-        name: 'UnknownErrorType',
-        stack: null,
-      };
-    } catch (e) {
-      return {
-        message: String(errorEventOrReason),
-        name: 'UnknownErrorTypeNonStringifiable',
-        stack: null,
-      };
-    }
-  }
-
-  /**
-   * Converts an array of arguments (from log/error) into a single string.
-   * Handles Error objects specially to include their message and stack.
-   * @param {Array<*>} args - Arguments passed to console methods.
-   * @return {string} A string representation of the arguments.
-   */
-  function stringifyArgs(args) {
-    return args
-      .map((arg) => {
-        if (arg instanceof Error) {
-          const {message, stack} = arg;
-          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
-        }
-        if (typeof arg === 'object' && arg !== null) {
-          try {
-            return JSON.stringify(arg);
-          } catch (error) {
-            return '[Circular Object]';
-          }
-        } else {
-          return String(arg);
-        }
-      })
-      .join(' ');
-  }
-
-  console.log = function(...args) {
-    const logString = stringifyArgs(args);
-    window.parent.postMessage({ type: 'log', message: logString }, '*');
-    originalConsoleLog.apply(console, args);
-  };
-
-  console.error = function(...args) {
-    let errorData;
-    if (args.length > 0 && args[0] instanceof Error) {
-      const err = args[0];
-      // If the first arg is an Error, capture its details.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        ...getErrorObject(err),
-        rawArgsString: stringifyArgs(args.slice(1)),
-        timestamp: new Date().toISOString(),
-      };
-    } else {
-      // If not an Error object, treat all args as a general error message.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        message: stringifyArgs(args),
-        name: 'ConsoleLoggedError',
-        stack: null,
-        timestamp: new Date().toISOString(),
-      };
-    }
-    window.parent.postMessage(errorData, '*');
-    originalConsoleError.apply(console, args);
-  };
-
-  // Listen for global unhandled synchronous errors.
-  window.addEventListener('error', function(event) {
-    const errorDetails = event.error ? getErrorObject(event.error) : {
-      message: event.message,
-      name: 'GlobalError',
-      stack: null,
-      filename: event.filename,
-      lineno: event.lineno,
-      colno: event.colno,
-    };
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'global',
-      ...errorDetails,
-      message: errorDetails.message || event.message,
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-  // Listen for unhandled promise rejections (asynchronous errors).
-  window.addEventListener('unhandledrejection', function(event) {
-    const errorDetails = getErrorObject(event.reason);
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'unhandledrejection',
-      ...errorDetails,
-      message: errorDetails.message || 'Unhandled Promise Rejection',
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-})();</script>
+<html lang="en" class="dark">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#141413">
@@ -824,15 +10,14 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
   <meta name="apple-mobile-web-app-title" content="OmniClaude">
   <title>OmniClaude Mobile — Smart Auto-Router Edition</title>
 
-  <!-- Inline SVG App Icon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23141413'/%3E%3Crect x='4' y='4' width='56' height='56' rx='13' fill='%231f1e1c' stroke='%23d97757' stroke-width='2'/%3E%3Cpath d='M32 14l4.4 13.6L50 32l-13.6 4.4L32 50l-4.4-13.6L14 32l13.6-4.4z' fill='%23d97757'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" href="./icon.png">
+  <link rel="manifest" href="manifest.json">
+  <script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }</script>
 
-  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 
-  <!-- Mozilla PDF.js for Native Client-Side Multi-PDF Text & Canvas Extraction -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
   <script>
     if (window.pdfjsLib) {
@@ -840,7 +25,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     }
   </script>
 
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -867,7 +51,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
   </script>
 
   <style>
-    /* Dynamic mobile viewport & Anthropic Claude warm dark palette */
     html, body {
       height: 100dvh;
       margin: 0;
@@ -878,33 +61,12 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       overflow: hidden;
       -webkit-tap-highlight-color: transparent;
     }
-
-    /* Warm subtle scrollbars */
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #33312d;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #48453f;
-    }
-
-    /* Hide horizontal scrollbar on compact mode strip */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    /* Streaming cursor */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #33312d; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #48453f; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .stream-cursor::after {
       content: '▋';
       display: inline-block;
@@ -916,16 +78,8 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       0%, 49% { opacity: 1; }
       50%, 100% { opacity: 0; }
     }
-
-    /* Markdown prose formatting */
-    .md-prose p {
-      margin-bottom: 0.7rem;
-      line-height: 1.65;
-      color: #f2f0ea;
-    }
-    .md-prose p:last-child {
-      margin-bottom: 0;
-    }
+    .md-prose p { margin-bottom: 0.7rem; line-height: 1.65; color: #f2f0ea; }
+    .md-prose p:last-child { margin-bottom: 0; }
     .md-prose h1, .md-prose h2, .md-prose h3 {
       font-weight: 600;
       color: #ffffff;
@@ -936,16 +90,10 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     .md-prose h1 { font-size: 1.18rem; }
     .md-prose h2 { font-size: 1.06rem; }
     .md-prose h3 { font-size: 0.96rem; }
-    .md-prose ul, .md-prose ol {
-      margin-left: 1.25rem;
-      margin-bottom: 0.75rem;
-    }
+    .md-prose ul, .md-prose ol { margin-left: 1.25rem; margin-bottom: 0.75rem; }
     .md-prose ul { list-style-type: disc; }
     .md-prose ol { list-style-type: decimal; }
-    .md-prose li {
-      margin-bottom: 0.3rem;
-      line-height: 1.58;
-    }
+    .md-prose li { margin-bottom: 0.3rem; line-height: 1.58; }
     .md-prose code.inline-code {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.84em;
@@ -962,32 +110,21 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       margin: 0.65rem 0;
       font-style: italic;
     }
-    .md-prose a {
-      color: #e48566;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    /* Syntax Highlighting Tokens */
+    .md-prose a { color: #e48566; text-decoration: underline; text-underline-offset: 2px; }
     .tok-kw { color: #e0826d; font-weight: 500; }
     .tok-str { color: #a3be8c; }
     .tok-num { color: #d08770; }
     .tok-com { color: #75726a; font-style: italic; }
     .tok-tag { color: #ebcb8b; }
   </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, system-ui, -apple-system, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:JetBrains Mono, monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.left-0{left:0px}.left-1\/2{left:50%}.right-2\.5{right:0.625rem}.top-0{top:0px}.top-1\/2{top:50%}.top-16{top:4rem}.z-20{z-index:20}.z-30{z-index:30}.z-40{z-index:40}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.my-auto{margin-top:auto;margin-bottom:auto}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.ml-5{margin-left:1.25rem}.mt-0\.5{margin-top:0.125rem}.line-clamp-1{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-1\.5{height:0.375rem}.h-14{height:3.5rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-3\.5{height:0.875rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-9{height:2.25rem}.h-\[100dvh\]{height:100dvh}.h-full{height:100%}.max-h-36{max-height:9rem}.max-h-\[88dvh\]{max-height:88dvh}.max-h-\[92dvh\]{max-height:92dvh}.min-h-\[36px\]{min-height:36px}.min-h-\[38px\]{min-height:38px}.min-h-\[40px\]{min-height:40px}.min-h-\[42px\]{min-height:42px}.min-h-full{min-height:100%}.w-12{width:3rem}.w-14{width:3.5rem}.w-2{width:0.5rem}.w-2\.5{width:0.625rem}.w-3\.5{width:0.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-9{width:2.25rem}.w-\[84\%\]{width:84%}.w-\[92\%\]{width:92%}.w-full{width:100%}.min-w-0{min-width:0px}.min-w-\[38px\]{min-width:38px}.min-w-\[40px\]{min-width:40px}.min-w-\[42px\]{min-width:42px}.max-w-3xl{max-width:48rem}.max-w-\[320px\]{max-width:320px}.max-w-\[380px\]{max-width:380px}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-x-full{--tw-translate-x:-100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-0{--tw-translate-x:0px;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}.cursor-pointer{cursor:pointer}.select-all{-webkit-user-select:all;user-select:all}.resize-none{resize:none}.list-decimal{list-style-type:decimal}.appearance-none{-webkit-appearance:none;appearance:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-5{gap:1.25rem}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.overscroll-contain{overscroll-behavior:contain}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-t-3xl{border-top-left-radius:1.5rem;border-top-right-radius:1.5rem}.border{border-width:1px}.border-0{border-width:0px}.border-b{border-bottom-width:1px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-emerald-500\/30{border-color:rgb(16 185 129 / 0.3)}.border-ocAccent\/35{border-color:rgb(217 119 87 / 0.35)}.border-ocAccent\/40{border-color:rgb(217 119 87 / 0.4)}.border-ocBorder{--tw-border-opacity:1;border-color:rgb(46 44 41 / var(--tw-border-opacity, 1))}.border-red-500\/30{border-color:rgb(239 68 68 / 0.3)}.border-ocAccent\/45{border-color:rgb(217 119 87 / 0.45)}.bg-\[\#0b0b0a\]{--tw-bg-opacity:1;background-color:rgb(11 11 10 / var(--tw-bg-opacity, 1))}.bg-\[\#0f0f0e\]{--tw-bg-opacity:1;background-color:rgb(15 15 14 / var(--tw-bg-opacity, 1))}.bg-\[\#191816\]{--tw-bg-opacity:1;background-color:rgb(25 24 22 / var(--tw-bg-opacity, 1))}.bg-\[\#1a1917\]{--tw-bg-opacity:1;background-color:rgb(26 25 23 / var(--tw-bg-opacity, 1))}.bg-black\/70{background-color:rgb(0 0 0 / 0.7)}.bg-black\/80{background-color:rgb(0 0 0 / 0.8)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/15{background-color:rgb(16 185 129 / 0.15)}.bg-indigo-500\/15{background-color:rgb(99 102 241 / 0.15)}.bg-ocAccent{--tw-bg-opacity:1;background-color:rgb(217 119 87 / var(--tw-bg-opacity, 1))}.bg-ocAccent\/15{background-color:rgb(217 119 87 / 0.15)}.bg-ocAccent\/20{background-color:rgb(217 119 87 / 0.2)}.bg-ocBg{--tw-bg-opacity:1;background-color:rgb(20 20 19 / var(--tw-bg-opacity, 1))}.bg-ocBg\/95{background-color:rgb(20 20 19 / 0.95)}.bg-ocCard{--tw-bg-opacity:1;background-color:rgb(31 30 28 / var(--tw-bg-opacity, 1))}.bg-ocCard\/90{background-color:rgb(31 30 28 / 0.9)}.bg-ocElevated{--tw-bg-opacity:1;background-color:rgb(41 40 37 / var(--tw-bg-opacity, 1))}.bg-ocMuted{--tw-bg-opacity:1;background-color:rgb(156 152 143 / var(--tw-bg-opacity, 1))}.bg-red-500\/10{background-color:rgb(239 68 68 / 0.1)}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-0{padding:0px}.p-0\.5{padding:0.125rem}.p-1{padding:0.25rem}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.px-0\.5{padding-left:0.125rem;padding-right:0.125rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-1\.5{padding-bottom:0.375rem}.pb-2{padding-bottom:0.5rem}.pb-4{padding-bottom:1rem}.pb-\[max\(0\.65rem\2c env\(safe-area-inset-bottom\)\)\]{padding-bottom:max(0.65rem,env(safe-area-inset-bottom))}.pl-3{padding-left:0.75rem}.pr-7{padding-right:1.75rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.text-left{text-align:left}.text-center{text-align:center}.font-mono{font-family:JetBrains Mono, monospace}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.text-\[\#141413\]{--tw-text-opacity:1;color:rgb(20 20 19 / var(--tw-text-opacity, 1))}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-gray-100{--tw-text-opacity:1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.text-gray-200{--tw-text-opacity:1;color:rgb(229 231 235 / var(--tw-text-opacity, 1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252 / var(--tw-text-opacity, 1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248 / var(--tw-text-opacity, 1))}.text-ocAccent{--tw-text-opacity:1;color:rgb(217 119 87 / var(--tw-text-opacity, 1))}.text-ocBorder{--tw-text-opacity:1;color:rgb(46 44 41 / var(--tw-text-opacity, 1))}.text-ocMuted{--tw-text-opacity:1;color:rgb(156 152 143 / var(--tw-text-opacity, 1))}.text-ocText{--tw-text-opacity:1;color:rgb(242 240 234 / var(--tw-text-opacity, 1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.placeholder-\[\#666\]::placeholder{--tw-placeholder-opacity:1;color:rgb(102 102 102 / var(--tw-placeholder-opacity, 1))}.placeholder-\[\#76736c\]::placeholder{--tw-placeholder-opacity:1;color:rgb(118 115 108 / var(--tw-placeholder-opacity, 1))}.opacity-0{opacity:0}.opacity-25{opacity:0.25}.opacity-75{opacity:0.75}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-150{transition-duration:150ms}.duration-200{transition-duration:200ms}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.focus-within\:border-ocAccent\/75:focus-within{border-color:rgb(217 119 87 / 0.75)}.hover\:bg-\[\#34332e\]:hover{--tw-bg-opacity:1;background-color:rgb(52 51 46 / var(--tw-bg-opacity, 1))}.hover\:bg-\[\#35342f\]:hover{--tw-bg-opacity:1;background-color:rgb(53 52 47 / var(--tw-bg-opacity, 1))}.hover\:bg-ocAccent\/25:hover{background-color:rgb(217 119 87 / 0.25)}.hover\:bg-ocAccentHover:hover{--tw-bg-opacity:1;background-color:rgb(228 133 102 / var(--tw-bg-opacity, 1))}.hover\:bg-ocCard:hover{--tw-bg-opacity:1;background-color:rgb(31 30 28 / var(--tw-bg-opacity, 1))}.hover\:bg-ocElevated:hover{--tw-bg-opacity:1;background-color:rgb(41 40 37 / var(--tw-bg-opacity, 1))}.hover\:bg-red-500\/20:hover{background-color:rgb(239 68 68 / 0.2)}.hover\:bg-ocBg:hover{--tw-bg-opacity:1;background-color:rgb(20 20 19 / var(--tw-bg-opacity, 1))}.hover\:text-ocAccent:hover{--tw-text-opacity:1;color:rgb(217 119 87 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:text-red-400:hover{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.focus\:border-ocAccent:focus{--tw-border-opacity:1;border-color:rgb(217 119 87 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.active\:scale-\[0\.99\]:active{--tw-scale-x:0.99;--tw-scale-y:0.99;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 640px){.sm\:max-w-\[480px\]{max-width:480px}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:items-center{align-items:center}.sm\:rounded-2xl{border-radius:1rem}.sm\:border{border-width:1px}.sm\:p-4{padding:1rem}.sm\:px-4{padding-left:1rem;padding-right:1rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-\[15px\]{font-size:15px}.sm\:text-base{font-size:1rem;line-height:1.5rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}.sm\:text-xs{font-size:0.75rem;line-height:1rem}.sm\:opacity-0{opacity:0}.group:hover .sm\:group-hover\:opacity-100{opacity:1}}</style><link rel="manifest" href="manifest.json">
-<script>if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }</script></head>
+</head>
 <body class="flex flex-col h-[100dvh] bg-ocBg text-ocText">
 
-  <!-- Toast Notification Banner -->
   <div id="toast-container" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-2 w-[92%] max-w-md"></div>
 
-  <!-- Slide-out Drawer Backdrop -->
   <div id="drawer-backdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 hidden opacity-0 transition-opacity duration-200"></div>
 
-  <!-- ==================== SLIDE-OUT SESSIONS & SETTINGS DRAWER ==================== -->
-  <aside id="history-drawer" class="fixed top-0 left-0 bottom-0 w-[84%] max-w-[320px] bg-ocCard border-r border-ocBorder z-50 -translate-x-full transition-transform duration-250 ease-out flex flex-col shadow-2xl">
-    <!-- Drawer Header -->
+  <aside id="history-drawer" class="fixed top-0 left-0 bottom-0 w-[84%] max-w-[320px] bg-ocCard border-r border-ocBorder z-50 -translate-x-full transition-transform duration-200 ease-out flex flex-col shadow-2xl">
     <div class="p-4 border-b border-ocBorder flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-9 h-9 rounded-xl bg-ocAccent/15 border border-ocAccent/40 flex items-center justify-center">
@@ -1007,7 +144,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </button>
     </div>
 
-    <!-- New Session Button -->
     <div class="p-3">
       <button onclick="createNewSession()" class="w-full py-3 px-4 rounded-xl bg-ocAccent hover:bg-ocAccentHover active:scale-[0.99] text-[#141413] font-semibold text-sm flex items-center justify-center gap-2 transition shadow-md">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -1017,28 +153,13 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </button>
     </div>
 
-    <!-- Saved Sessions Header -->
     <div class="px-3.5 pb-1.5 flex items-center justify-between">
       <span class="text-[11px] font-semibold uppercase tracking-wider text-ocMuted">Saved Sessions</span>
-      <span id="session-count-badge" class="text-[11px] font-mono text-ocMuted">1</span>
+      <span id="session-count-badge" class="text-[11px] font-mono text-ocMuted">0</span>
     </div>
 
-    <!-- Sessions List -->
-    <div id="session-list" class="flex-1 overflow-y-auto px-3 py-1 space-y-1.5">
-          <div onclick="switchSession('sess_1795535665309_rrran')" class="group flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition bg-ocElevated border border-ocAccent/40 text-white">
-            <div class="min-w-0 flex-1">
-              <p class="text-xs font-medium truncate">New Session</p>
-              <p class="text-[10px] text-ocMuted mt-0.5">Just now · 0 msgs</p>
-            </div>
-            <button onclick="deleteSession(event, 'sess_1795535665309_rrran')" aria-label="Delete Session" class="p-1.5 rounded-lg text-ocMuted hover:text-red-400 hover:bg-ocBg sm:opacity-0 sm:group-hover:opacity-100 transition">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
+    <div id="session-list" class="flex-1 overflow-y-auto px-3 py-1 space-y-1.5"></div>
 
-    <!-- Drawer Footer Quick Actions -->
     <div class="p-3 border-t border-ocBorder bg-[#191816] space-y-2">
       <button onclick="toggleDrawer(false); openSettingsModal('providers');" class="w-full py-2.5 px-3 rounded-xl bg-ocElevated hover:bg-[#34332e] border border-ocBorder text-ocText text-xs font-medium flex items-center justify-between transition">
         <span class="flex items-center gap-2">
@@ -1059,36 +180,33 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </div>
   </aside>
 
-  <!-- ==================== TOP APP HEADER ==================== -->
   <header class="shrink-0 h-14 px-2 sm:px-4 bg-ocBg/95 backdrop-blur-md border-b border-ocBorder flex items-center justify-between gap-1.5 z-30">
-    <!-- Left: Drawer Toggle -->
     <button onclick="toggleDrawer(true)" aria-label="Open Chat History" class="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-ocMuted hover:text-white hover:bg-ocCard active:scale-95 transition shrink-0">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h11M4 18h16"></path>
       </svg>
     </button>
 
-    <!-- Center: Smart Auto-Router + All 18 Models + Custom Model ID Dropdown -->
     <div class="relative flex-1 min-w-0 max-w-[380px] sm:max-w-[480px]">
       <select id="header-model-select" aria-label="Select AI Model or Smart Auto-Router" onchange="handleModelSelectChange(this.value)" class="w-full min-h-[38px] pl-3 pr-7 py-1.5 rounded-full bg-ocCard hover:bg-ocElevated border border-ocBorder focus:border-ocAccent text-[11px] sm:text-xs font-medium text-white appearance-none truncate focus:outline-none transition cursor-pointer">
         <option value="auto">✨ Smart Auto-Router (Auto-Picks Best Model per Prompt)</option>
-        <option value="qwen-coder-large">Qwen Coder Large (Best for Heavy Coding, HTML Apps &amp; Complex Debugging)</option>
-        <option value="qwen-coder">Qwen Coder (Best for Fast Coding &amp; Clean Syntax)</option>
-        <option value="gemini-large">Gemini Large (Best for 1M Context, Multi-PDF Papers &amp; Full Syllabus)</option>
-        <option value="deepseek">DeepSeek (Best for Heavy Reasoning, Exam Numericals &amp; Algorithms)</option>
-        <option value="qwen-vision">Qwen Vision (Best for Error Screenshots, Diagrams &amp; Scanned PDFs)</option>
-        <option value="gemini-search">Gemini Search (Best for Live Web Search, 2026 Updates &amp; Latest Docs)</option>
-        <option value="openai-large">OpenAI Large (Best for Balanced Reasoning, Writing &amp; Complex Explanations)</option>
-        <option value="openai-fast">OpenAI Fast (Best for Instant 1-2s Replies &amp; Short Definitions)</option>
-        <option value="mistral-large">Mistral Large (Best for Structured Study Notes &amp; Multilingual Tasks)</option>
-        <option value="grok-large">Grok Large (Best for Direct Answers &amp; Technical Problem Solving)</option>
-        <option value="claude-sonnet">Claude Sonnet (Via Custom/OmniRoute Key — Paid Tier)</option>
-        <option value="claude-haiku">Claude Haiku (Via Custom/OmniRoute Key — Paid Tier)</option>
-        <option value="groq-llama-3.3-70b">Groq Llama 3.3 70B (Best for Ultra-Fast LPU Inference with Groq Key)</option>
-        <option value="google-gemini-2.5-flash">Google Gemini 2.5 Flash (Best for 1M Context &amp; Vision with Google Key)</option>
-        <option value="mistral-small">Mistral Small (Best for Fast Lightweight Tasks with Mistral Key)</option>
-        <option value="deepseek-r1">DeepSeek R1 (Best for Deep Chain-of-Thought Math &amp; Logic)</option>
-        <option value="qwen-2.5-72b">Qwen 2.5 72B (Best for Large Open-Source General Reasoning)</option>
+        <option value="groq-fast">Groq Cloud (Ultra-Fast LPU — Uses Saved Groq Key)</option>
+        <option value="google-gemini">Google Gemini Flash (1M Context &amp; Vision — Uses Google Key)</option>
+        <option value="mistral-small">Mistral Small (Fast Lightweight Tasks — Uses Mistral Key)</option>
+        <option value="qwen-coder-large">Qwen Coder Large (Heavy Coding, HTML Apps &amp; Debugging)</option>
+        <option value="qwen-coder">Qwen Coder (Fast Coding &amp; Clean Syntax)</option>
+        <option value="gemini-large">Gemini Large (1M Context, Multi-PDF Papers &amp; Syllabus)</option>
+        <option value="deepseek">DeepSeek (Heavy Reasoning, Exam Numericals &amp; Algorithms)</option>
+        <option value="qwen-vision">Qwen Vision (Error Screenshots, Diagrams &amp; Scanned PDFs)</option>
+        <option value="gemini-search">Gemini Search (Live Web Search &amp; Latest Docs)</option>
+        <option value="openai-large">OpenAI Large (Balanced Reasoning &amp; Explanations)</option>
+        <option value="openai-fast">OpenAI Fast (Instant Replies &amp; Short Definitions)</option>
+        <option value="mistral-large">Mistral Large (Structured Study Notes &amp; Multilingual)</option>
+        <option value="grok-large">Grok Large (Direct Answers &amp; Technical Problem Solving)</option>
+        <option value="claude-sonnet">Claude Sonnet (Via Custom/OmniRoute Key)</option>
+        <option value="claude-haiku">Claude Haiku (Via Custom/OmniRoute Key)</option>
+        <option value="deepseek-r1">DeepSeek R1 (Chain-of-Thought Math &amp; Logic)</option>
+        <option value="qwen-2.5-72b">Qwen 2.5 72B (Large Open-Source General Reasoning)</option>
         <option value="custom">Custom Model ID (Type Any Model Name Manually)</option>
       </select>
       <svg class="w-3.5 h-3.5 text-ocMuted pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -1096,7 +214,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       </svg>
     </div>
 
-    <!-- Right: Live/Demo Pill + Settings Gear -->
     <div class="flex items-center gap-1 shrink-0">
       <button id="demo-live-btn" onclick="toggleDemoMode()" title="Toggle Live / Demo Mode" class="min-h-[36px] px-2.5 py-1 rounded-full bg-ocCard hover:bg-ocElevated border border-ocBorder text-[11px] font-semibold flex items-center gap-1.5 active:scale-95 transition">
         <span id="demo-live-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -1112,21 +229,18 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </div>
   </header>
 
-  <!-- ==================== INLINE CUSTOM MODEL INPUT BAR ==================== -->
   <div id="custom-model-bar" class="hidden shrink-0 px-3 py-2 bg-[#1a1917] border-b border-ocBorder">
     <div class="max-w-3xl mx-auto flex items-center gap-2">
       <span class="text-[11px] font-semibold text-ocAccent shrink-0">Custom ID:</span>
-      <input id="inline-custom-model-input" type="text" placeholder="e.g. pollinations/qwen-coder-large or claude-3-5-sonnet" oninput="updateCustomModelId(this.value)" class="flex-1 min-w-0 bg-ocBg border border-ocBorder focus:border-ocAccent rounded-xl px-3 py-1.5 text-xs font-mono text-white placeholder-[#76736c] focus:outline-none">
+      <input id="inline-custom-model-input" type="text" placeholder="e.g. openai/gpt-oss-120b or gemini-3-flash-preview" oninput="updateCustomModelId(this.value)" class="flex-1 min-w-0 bg-ocBg border border-ocBorder focus:border-ocAccent rounded-xl px-3 py-1.5 text-xs font-mono text-white placeholder-[#76736c] focus:outline-none">
       <button type="button" onclick="saveCustomModelToast()" class="px-3 py-1.5 rounded-xl bg-ocAccent hover:bg-ocAccentHover text-[#141413] text-xs font-semibold shrink-0 transition">
         Apply
       </button>
     </div>
   </div>
 
-  <!-- ==================== WORKSPACE MODE & QUICK ACTION BAR ==================== -->
   <div class="shrink-0 px-2.5 sm:px-4 py-1.5 bg-ocCard/90 border-b border-ocBorder z-20">
     <div class="max-w-3xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
-      <!-- 3 Workspace Modes -->
       <div class="inline-flex items-center p-0.5 rounded-xl bg-ocBg border border-ocBorder shrink-0">
         <button id="mode-btn-code" onclick="setWorkspaceMode('code')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium text-ocMuted hover:text-white transition">
           💻 Code Agent
@@ -1139,7 +253,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         </button>
       </div>
 
-      <!-- Quick PDF & APK Chips -->
       <div class="flex items-center gap-1.5 shrink-0">
         <button onclick="document.getElementById('universal-file-input').click()" class="px-2.5 py-1 rounded-full bg-ocAccent/15 hover:bg-ocAccent/25 border border-ocAccent/40 text-ocAccent text-[11px] font-semibold flex items-center gap-1 transition">
           <span>📎 Upload PDFs</span>
@@ -1151,11 +264,9 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </div>
   </div>
 
-  <!-- ==================== MAIN SCROLLABLE WORKSPACE ==================== -->
   <main id="chat-scroll-container" class="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-6 py-4">
     <div class="max-w-3xl mx-auto flex flex-col min-h-full">
 
-      <!-- Empty / Welcome Screen -->
       <div id="welcome-screen" class="flex-1 flex flex-col items-center justify-center text-center py-4 px-1 my-auto">
         <div class="w-14 h-14 rounded-2xl bg-ocCard border border-ocBorder flex items-center justify-center mb-4 shadow-lg">
           <svg class="w-7 h-7 text-ocAccent" viewBox="0 0 24 24" fill="currentColor">
@@ -1165,15 +276,14 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
 
         <h1 class="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1.5">OmniClaude Mobile</h1>
         <p class="text-xs sm:text-sm text-ocMuted max-w-md mb-5 leading-relaxed">
-          <span class="text-ocAccent font-medium">✨ Smart Auto-Router</span> automatically detects your intent as you type—picking <span class="text-white">Gemini Large</span> for 10+ PDFs, <span class="text-white">DeepSeek</span> for exam numericals, <span class="text-white">Qwen Vision</span> for screenshots, and <span class="text-white">Qwen Coder Large</span> for apps.
+          <span class="text-ocAccent font-medium">✨ Smart Auto-Router</span> prioritizes your saved <span class="text-white">Groq</span> &amp; <span class="text-white">Google AI Studio</span> keys with instant failover across coding, exam numericals, screenshots, and multi-PDF study guides.
         </p>
 
-        <!-- Starter Cards Demonstrating Different Auto-Router Intents -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-xl text-left">
           <button onclick="triggerPdfExamWorkflow()" class="p-3.5 rounded-2xl bg-ocCard hover:bg-ocElevated active:scale-[0.99] border border-ocAccent/35 transition group">
             <div class="flex items-center justify-between gap-2 mb-1">
               <span class="text-xs sm:text-sm font-semibold text-white">📄 Upload 10-Yr PDFs → Study Guide</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-ocAccent border border-ocBorder">Gemini Large</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-ocAccent border border-ocBorder">Gemini</span>
             </div>
             <p class="text-[11px] text-ocMuted line-clamp-1">Auto-extracts PDF text &amp; scanned pages into interactive tabs</p>
           </button>
@@ -1181,7 +291,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <button onclick="sendNumericalStarter()" class="p-3.5 rounded-2xl bg-ocCard hover:bg-ocElevated active:scale-[0.99] border border-ocBorder transition group">
             <div class="flex items-center justify-between gap-2 mb-1">
               <span class="text-xs sm:text-sm font-medium text-white">🧮 Solve Banker's Algorithm</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-emerald-400 border border-ocBorder">DeepSeek</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-emerald-400 border border-ocBorder">Reasoning</span>
             </div>
             <p class="text-[11px] text-ocMuted line-clamp-1">Step-by-step Need matrix &amp; safe sequence numerical</p>
           </button>
@@ -1189,7 +299,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <button onclick="sendCodeStarter()" class="p-3.5 rounded-2xl bg-ocCard hover:bg-ocElevated active:scale-[0.99] border border-ocBorder transition group">
             <div class="flex items-center justify-between gap-2 mb-1">
               <span class="text-xs sm:text-sm font-medium text-white">💻 Build Study App + Preview</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-amber-300 border border-ocBorder">Qwen Coder</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-amber-300 border border-ocBorder">Code Agent</span>
             </div>
             <p class="text-[11px] text-ocMuted line-clamp-1">Single-file HTML/JS app runnable in full-screen sandbox</p>
           </button>
@@ -1197,24 +307,21 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <button onclick="sendSearchStarter()" class="p-3.5 rounded-2xl bg-ocCard hover:bg-ocElevated active:scale-[0.99] border border-ocBorder transition group">
             <div class="flex items-center justify-between gap-2 mb-1">
               <span class="text-xs sm:text-sm font-medium text-white">🌐 Latest 2026 Tech News</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-indigo-300 border border-ocBorder">Gemini Search</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-ocBg text-indigo-300 border border-ocBorder">Search</span>
             </div>
-            <p class="text-[11px] text-ocMuted line-clamp-1">Auto-routes live search queries to web-grounded Gemini</p>
+            <p class="text-[11px] text-ocMuted line-clamp-1">Auto-routes live search queries to the fastest available model</p>
           </button>
         </div>
       </div>
 
-      <!-- Messages List -->
       <div id="messages-list" class="hidden flex-col gap-5 pb-4"></div>
 
     </div>
   </main>
 
-  <!-- ==================== BOTTOM COMPOSER BAR + LIVE ROUTING PREVIEW ==================== -->
   <footer class="shrink-0 bg-ocBg border-t border-ocBorder px-2.5 sm:px-4 pt-2 pb-[max(0.65rem,env(safe-area-inset-bottom))] z-20">
     <div class="max-w-3xl mx-auto">
 
-      <!-- Live PDF Extraction Progress Pill -->
       <div id="pdf-progress-container" class="hidden mb-2 p-2.5 rounded-2xl bg-ocCard border border-ocAccent/40 shadow-md">
         <div class="flex items-center justify-between gap-2 mb-1.5">
           <div class="flex items-center gap-2 min-w-0">
@@ -1231,16 +338,14 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         </div>
       </div>
 
-      <!-- Claude-Style Attachment Chips Strip -->
       <div id="attachments-strip" class="hidden flex-wrap items-center gap-2 mb-2 px-0.5 max-h-36 overflow-y-auto"></div>
 
-      <!-- LIVE ROUTING PREVIEW BAR (Right above the input box) -->
       <div id="live-routing-bar" class="mb-2 px-2.5 py-1.5 rounded-xl bg-ocCard border border-ocBorder flex items-center justify-between gap-2 shadow-xs">
         <div class="flex items-center gap-1.5 min-w-0 text-[11px] sm:text-xs">
           <span id="routing-bar-badge" class="font-semibold text-ocAccent shrink-0">✨ Auto-Pick:</span>
-          <span id="routing-bar-model" class="font-mono font-semibold text-white shrink-0">Qwen Coder Large</span>
+          <span id="routing-bar-model" class="font-mono font-semibold text-white shrink-0">Auto</span>
           <span class="text-ocBorder shrink-0">•</span>
-          <span id="routing-bar-reason" class="text-ocMuted truncate">Coding &amp; Interactive UI</span>
+          <span id="routing-bar-reason" class="text-ocMuted truncate">Smart Routing</span>
         </div>
         <div class="flex items-center gap-1 shrink-0">
           <button id="routing-lock-btn" type="button" onclick="handleRoutingLockOrReset()" class="px-2 py-0.5 rounded-lg bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-[10px] font-semibold text-ocText transition">Lock</button>
@@ -1250,30 +355,23 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         </div>
       </div>
 
-      <!-- Composer Input Card -->
       <div class="bg-ocCard border border-ocBorder focus-within:border-ocAccent/75 rounded-2xl p-1.5 flex items-end gap-1 shadow-xl transition-colors">
-
-        <!-- Universal Multi-File Input (PDFs, Code, Text, Images) -->
         <input id="universal-file-input" type="file" multiple="" accept=".pdf,.txt,.md,.py,.js,.ts,.jsx,.tsx,.html,.css,.java,.c,.cpp,.json,.csv,.sql,image/*" class="hidden" onchange="handleUniversalFilesSelected(event)">
 
-        <!-- Paperclip (📎) Multi-PDF / Image / Code Attachment Button -->
         <button onclick="document.getElementById('universal-file-input').click()" title="Attach PDFs, Screenshots, or Code Files" aria-label="Attach Files" class="min-w-[42px] min-h-[42px] rounded-xl text-ocMuted hover:text-ocAccent hover:bg-ocElevated active:scale-95 flex items-center justify-center shrink-0 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
           </svg>
         </button>
 
-        <!-- Paste Code / Syllabus Snippet Button -->
         <button onclick="openPasteSnippetModal()" title="Paste Code or Syllabus Text" aria-label="Paste Snippet" class="min-w-[40px] min-h-[40px] rounded-xl text-ocMuted hover:text-white hover:bg-ocElevated active:scale-95 flex items-center justify-center shrink-0 transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
           </svg>
         </button>
 
-        <!-- Auto-Expanding Prompt Textarea -->
         <textarea id="chat-input" rows="1" placeholder="Attach past paper PDFs, ask a numerical, or build a study guide..." class="flex-1 bg-transparent text-ocText placeholder-[#76736c] text-sm sm:text-[15px] py-2.5 px-1 max-h-36 resize-none focus:outline-none leading-snug" oninput="handleComposerInput(this)" onkeydown="handleComposerKeydown(event)"></textarea>
 
-        <!-- Send / Stop Button -->
         <button id="send-stop-btn" onclick="handleSendOrStop()" aria-label="Send Message" class="min-w-[42px] min-h-[42px] rounded-xl bg-ocAccent hover:bg-ocAccentHover active:scale-95 text-[#141413] font-semibold flex items-center justify-center shrink-0 shadow-md transition">
           <svg id="send-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"></path>
@@ -1286,7 +384,6 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </div>
   </footer>
 
-  <!-- ==================== MODAL 1: INSPECT EXTRACTED PDF / FILE CONTENT ==================== -->
   <div id="inspect-modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-xs p-0 sm:p-4">
     <div class="bg-ocCard border-t sm:border border-ocBorder rounded-t-3xl sm:rounded-2xl w-full max-w-xl max-h-[88dvh] flex flex-col shadow-2xl overflow-hidden">
       <div class="px-4 py-3.5 border-b border-ocBorder flex items-center justify-between gap-2">
@@ -1310,8 +407,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
     </div>
   </div>
 
-  <!-- ==================== MODAL 2: SETTINGS (PROVIDERS & KEYS + DOWNLOAD HTML / GET APK) ==================== -->
-  <div id="settings-modal" class="fixed inset-0 z-50 items-end sm:items-center justify-center bg-black/80 backdrop-blur-xs p-0 sm:p-4 flex">
+  <div id="settings-modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-xs p-0 sm:p-4">
     <div class="bg-ocCard border-t sm:border border-ocBorder rounded-t-3xl sm:rounded-2xl w-full max-w-xl max-h-[92dvh] flex flex-col shadow-2xl overflow-hidden">
       <div class="px-4 py-3.5 border-b border-ocBorder flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
@@ -1325,21 +421,18 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         </button>
       </div>
 
-      <!-- 2-Tab Navigation -->
       <div class="px-4 pt-3 pb-2 border-b border-ocBorder bg-[#191816] shrink-0">
         <div class="grid grid-cols-2 gap-1.5 p-1 bg-ocBg rounded-xl border border-ocBorder">
-          <button id="tab-btn-providers" onclick="switchSettingsTab('providers')" class="py-2 px-3 rounded-lg text-xs font-semibold text-ocMuted hover:text-white transition">
+          <button id="tab-btn-providers" onclick="switchSettingsTab('providers')" class="py-2 px-3 rounded-lg text-xs font-semibold bg-ocElevated text-white border border-ocAccent/45 transition">
             Providers &amp; Keys
           </button>
-          <button id="tab-btn-setup" onclick="switchSettingsTab('setup')" class="py-2 px-3 rounded-lg text-xs font-semibold bg-ocElevated text-white border border-ocAccent/45 transition">
+          <button id="tab-btn-setup" onclick="switchSettingsTab('setup')" class="py-2 px-3 rounded-lg text-xs font-semibold text-ocMuted hover:text-white transition">
             Download HTML / Get APK
           </button>
         </div>
       </div>
 
-      <!-- Tab 1: Providers & Keys -->
-      <div id="settings-tab-providers" class="flex-1 overflow-y-auto p-4 space-y-4 hidden">
-        <!-- Offline Demo Mode Switch -->
+      <div id="settings-tab-providers" class="flex-1 overflow-y-auto p-4 space-y-4">
         <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder flex items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2">
@@ -1347,7 +440,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
               <span id="settings-demo-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono">Off (Live)</span>
             </div>
             <p class="text-[11px] text-ocMuted mt-0.5 leading-relaxed">
-              Live Mode routes through Pollinations keyless &amp; your saved keys with silent failover. Turn ON for offline UI testing.
+              Live Mode routes through your saved Groq/Google keys first with silent failover. Turn ON for offline UI testing.
             </p>
           </div>
           <button id="settings-demo-switch" type="button" onclick="toggleDemoModeFromSettings()" role="switch" class="w-12 h-7 rounded-full bg-ocElevated p-1 transition-colors shrink-0 flex items-center">
@@ -1355,80 +448,8 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </button>
         </div>
 
-        <!-- Provider Cards -->
-        <div id="provider-cards-list" class="space-y-3">
-          <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h4 class="text-xs sm:text-sm font-semibold text-white">Pollinations AI (Keyless Default)</h4>
-              <span id="prov-badge-pollinations" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">● Built-in Free</span>
-            </div>
-            <p class="text-[10px] font-mono text-ocMuted truncate mb-2">https://text.pollinations.ai/openai</p>
-            <div class="flex gap-2">
-              <input id="prov-key-pollinations" type="password" value="" placeholder="No key required (Always Active)" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent">
-              <button type="button" onclick="testSingleProviderKey('pollinations')" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-xs font-semibold text-white shrink-0 transition">
-                Test Key
-              </button>
-            </div>
-          </div>
-        
-          <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h4 class="text-xs sm:text-sm font-semibold text-white">Google AI Studio (Gemini 1M Context)</h4>
-              <span id="prov-badge-google" class="text-[10px] px-2 py-0.5 rounded-full bg-ocElevated text-ocMuted border border-ocBorder font-medium">Optional</span>
-            </div>
-            <p class="text-[10px] font-mono text-ocMuted truncate mb-2">https://generativelanguage.googleapis.com/v1beta/openai/chat/completions</p>
-            <div class="flex gap-2">
-              <input id="prov-key-google" type="password" value="" placeholder="AIza... (from aistudio.google.com)" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent">
-              <button type="button" onclick="testSingleProviderKey('google')" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-xs font-semibold text-white shrink-0 transition">
-                Test Key
-              </button>
-            </div>
-          </div>
-        
-          <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h4 class="text-xs sm:text-sm font-semibold text-white">Groq Cloud (Ultra-Fast LPU)</h4>
-              <span id="prov-badge-groq" class="text-[10px] px-2 py-0.5 rounded-full bg-ocElevated text-ocMuted border border-ocBorder font-medium">Optional</span>
-            </div>
-            <p class="text-[10px] font-mono text-ocMuted truncate mb-2">https://api.groq.com/openai/v1/chat/completions</p>
-            <div class="flex gap-2">
-              <input id="prov-key-groq" type="password" value="" placeholder="gsk_... (from console.groq.com)" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent">
-              <button type="button" onclick="testSingleProviderKey('groq')" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-xs font-semibold text-white shrink-0 transition">
-                Test Key
-              </button>
-            </div>
-          </div>
-        
-          <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h4 class="text-xs sm:text-sm font-semibold text-white">Mistral AI (Large &amp; Small)</h4>
-              <span id="prov-badge-mistral" class="text-[10px] px-2 py-0.5 rounded-full bg-ocElevated text-ocMuted border border-ocBorder font-medium">Optional</span>
-            </div>
-            <p class="text-[10px] font-mono text-ocMuted truncate mb-2">https://api.mistral.ai/v1/chat/completions</p>
-            <div class="flex gap-2">
-              <input id="prov-key-mistral" type="password" value="" placeholder="Mistral API Key (from console.mistral.ai)" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent">
-              <button type="button" onclick="testSingleProviderKey('mistral')" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-xs font-semibold text-white shrink-0 transition">
-                Test Key
-              </button>
-            </div>
-          </div>
-        
-          <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder">
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h4 class="text-xs sm:text-sm font-semibold text-white">Local OmniRoute / FreeLLMAPI</h4>
-              <span id="prov-badge-local" class="text-[10px] px-2 py-0.5 rounded-full bg-ocElevated text-ocMuted border border-ocBorder font-medium">Optional</span>
-            </div>
-            <input id="local-endpoint-input" type="url" value="http://localhost:20128/v1/chat/completions" placeholder="http://localhost:20128/v1/chat/completions" class="w-full bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent mb-2">
-            <div class="flex gap-2">
-              <input id="prov-key-local" type="password" value="" placeholder="OmniRoute / Unified API Key (sk-...)" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent">
-              <button type="button" onclick="testSingleProviderKey('local')" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-xs font-semibold text-white shrink-0 transition">
-                Test Key
-              </button>
-            </div>
-          </div>
-        </div>
+        <div id="provider-cards-list" class="space-y-3"></div>
 
-        <!-- Export / Import / Reset -->
         <div class="pt-3 border-t border-ocBorder flex flex-wrap items-center justify-between gap-2">
           <div class="flex gap-2">
             <button type="button" onclick="exportBackupJson()" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-ocText text-xs font-medium transition">
@@ -1443,12 +464,11 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         </div>
       </div>
 
-      <!-- Tab 2: Download HTML / Get APK -->
-      <div id="settings-tab-setup" class="flex-1 overflow-y-auto p-4 space-y-4 text-xs sm:text-sm text-ocText">
+      <div id="settings-tab-setup" class="hidden flex-1 overflow-y-auto p-4 space-y-4 text-xs sm:text-sm text-ocText">
         <div class="p-4 rounded-2xl bg-ocBg border border-ocAccent/40 space-y-2.5">
           <h4 class="text-sm font-semibold text-white">Step 1: Download Standalone App File</h4>
           <p class="text-[11px] text-ocMuted leading-relaxed">
-            Saves the complete single-file app (Smart Auto-Router, PDF.js parser &amp; all 18 models) directly to your phone's Downloads folder.
+            Saves the complete single-file app (Smart Auto-Router, PDF.js parser &amp; live model discovery) directly to your device.
           </p>
           <button type="button" onclick="downloadSelfHtmlApp()" class="w-full py-3 px-4 rounded-xl bg-ocAccent hover:bg-ocAccentHover active:scale-[0.99] text-[#141413] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
@@ -1461,13 +481,11 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder space-y-2">
           <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-lg bg-emerald-500/15 text-emerald-400 font-bold text-xs flex items-center justify-center">2</span>
-            <h4 class="font-semibold text-white">Convert to Android .APK on Phone (No Laptop)</h4>
+            <h4 class="font-semibold text-white">Updates Sync Automatically</h4>
           </div>
-          <ol class="list-decimal ml-5 space-y-1.5 text-xs text-ocMuted leading-relaxed">
-            <li>Tap <strong class="text-white">Download omniclaude_mobile.html</strong> above to save it on your Android phone.</li>
-            <li>Open <strong class="text-white">WebIntoApp.com</strong> in Chrome on your phone (or upload the file to <strong class="text-white">tiiny.host</strong> and paste the URL into <strong class="text-white">PWABuilder.com</strong>).</li>
-            <li>Select <code class="text-white bg-ocCard px-1.5 py-0.5 rounded">omniclaude_mobile.html</code>, name it <strong class="text-white">OmniClaude</strong>, and download your installable <code class="text-emerald-400 font-mono">.apk</code> file in 30 seconds!</li>
-          </ol>
+          <p class="text-xs text-ocMuted leading-relaxed">
+            Because your APK is built via GitHub Pages and PWABuilder, every commit to <code class="text-white bg-ocCard px-1.5 py-0.5 rounded">index.html</code> updates your installed Android app automatically.
+          </p>
         </div>
 
         <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder space-y-2.5">
@@ -1489,7 +507,6 @@ omniroute &amp;</pre>
         </div>
       </div>
 
-      <!-- Footer -->
       <div class="p-3.5 border-t border-ocBorder bg-[#191816] flex gap-2.5 shrink-0">
         <button onclick="closeModal('settings-modal')" class="flex-1 py-2.5 rounded-xl bg-ocElevated hover:bg-[#35342f] text-ocText font-medium text-sm transition">
           Close
@@ -1501,7 +518,6 @@ omniroute &amp;</pre>
     </div>
   </div>
 
-  <!-- ==================== MODAL 3: PASTE CODE / SYLLABUS SNIPPET ==================== -->
   <div id="paste-snippet-modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-xs p-0 sm:p-4">
     <div class="bg-ocCard border-t sm:border border-ocBorder rounded-t-3xl sm:rounded-2xl w-full max-w-lg flex flex-col shadow-2xl overflow-hidden">
       <div class="px-4 py-3.5 border-b border-ocBorder flex items-center justify-between">
@@ -1529,7 +545,6 @@ omniroute &amp;</pre>
     </div>
   </div>
 
-  <!-- ==================== MODAL 4: FULL-SCREEN SANDBOXED LIVE PREVIEW ==================== -->
   <div id="live-preview-modal" class="fixed inset-0 z-50 hidden flex-col bg-ocBg">
     <div class="shrink-0 h-14 px-3 sm:px-4 bg-ocCard border-b border-ocBorder flex items-center justify-between gap-2">
       <div class="flex items-center gap-2 min-w-0">
@@ -1550,45 +565,107 @@ omniroute &amp;</pre>
     </div>
   </div>
 
-  <!-- ==================== APPLICATION SCRIPT ==================== -->
   <script>
-    // ==================== 1. INLINE PWA MANIFEST ====================
-    (function setupManifest() {
-      try {
-        const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#141413"/><rect x="24" y="24" width="464" height="464" rx="96" fill="#1f1e1c" stroke="#d97757" stroke-width="14"/><path d="M256 104l34 118 118 34-118 34-34 118-34-118-118-34 118-34z" fill="#d97757"/></svg>`;
-        const iconUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
-        const manifest = {
-          name: 'OmniClaude Mobile',
-          short_name: 'OmniClaude',
-          description: 'Smart Auto-Router Multi-PDF Exam Study & AI Coding Studio',
-          start_url: '.',
-          display: 'standalone',
-          background_color: '#141413',
-          theme_color: '#141413',
-          icons: [
-            { src: iconUri, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
-            { src: iconUri, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
-          ]
-        };
-        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-        const link = document.createElement('link');
-        link.rel = 'manifest';
-        link.href = URL.createObjectURL(blob);
-        document.head.appendChild(link);
-      } catch (_) {}
-    })();
-
-    // ==================== 2. MODEL CATALOG & ENDPOINT MAPPINGS ====================
     const POLLINATIONS_ENDPOINT = 'https://text.pollinations.ai/openai';
 
+    const PROVIDERS = {
+      groq: {
+        id: 'groq',
+        name: 'Groq Cloud (Ultra-Fast LPU)',
+        shortName: 'Groq',
+        endpoint: 'https://api.groq.com/openai/v1/chat/completions',
+        modelsEndpoint: 'https://api.groq.com/openai/v1/models',
+        keyless: false,
+        placeholder: 'gsk_... (from console.groq.com)',
+        testModel: 'openai/gpt-oss-120b',
+        candidateModels: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant']
+      },
+      google: {
+        id: 'google',
+        name: 'Google AI Studio (Gemini 1M Context)',
+        shortName: 'Google AI',
+        endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+        modelsEndpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/models',
+        keyless: false,
+        placeholder: 'AIza... (from aistudio.google.com)',
+        testModel: 'gemini-3-flash-preview',
+        candidateModels: ['gemini-3-flash-preview', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash']
+      },
+      mistral: {
+        id: 'mistral',
+        name: 'Mistral AI (Large & Small)',
+        shortName: 'Mistral',
+        endpoint: 'https://api.mistral.ai/v1/chat/completions',
+        modelsEndpoint: 'https://api.mistral.ai/v1/models',
+        keyless: false,
+        placeholder: 'Mistral API Key (from console.mistral.ai)',
+        testModel: 'mistral-small-latest',
+        candidateModels: ['mistral-small-latest', 'mistral-large-latest']
+      },
+      pollinations: {
+        id: 'pollinations',
+        name: 'Pollinations AI (Keyless Backup)',
+        shortName: 'Pollinations',
+        endpoint: POLLINATIONS_ENDPOINT,
+        keyless: true,
+        placeholder: 'No key required (Backup Pool)',
+        testModel: 'openai',
+        candidateModels: ['openai', 'openai-fast']
+      },
+      local: {
+        id: 'local',
+        name: 'Local OmniRoute / FreeLLMAPI',
+        shortName: 'OmniRoute',
+        endpoint: '',
+        keyless: true,
+        hasCustomUrl: true,
+        placeholder: 'OmniRoute / Unified API Key (sk-...)',
+        testModel: 'pollinations/openai',
+        candidateModels: ['pollinations/openai']
+      }
+    };
+
     const MODEL_REGISTRY = {
+      'groq-fast': {
+        displayName: 'Groq Cloud',
+        provider: 'groq',
+        apiModel: 'openai/gpt-oss-120b',
+        useResolved: true,
+        fallbacks: [
+          { provider: 'groq', apiModel: 'openai/gpt-oss-20b', displayName: 'Groq GPT-OSS 20B' },
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]
+      },
+      'google-gemini': {
+        displayName: 'Google Gemini Flash',
+        provider: 'google',
+        apiModel: 'gemini-3-flash-preview',
+        useResolved: true,
+        fallbacks: [
+          { provider: 'google', apiModel: 'gemini-3.5-flash-lite', displayName: 'Gemini 3.5 Flash Lite' },
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]
+      },
+      'mistral-small': {
+        displayName: 'Mistral Small',
+        provider: 'mistral',
+        apiModel: 'mistral-small-latest',
+        useResolved: true,
+        fallbacks: [
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]
+      },
       'qwen-coder-large': {
         displayName: 'Qwen Coder Large',
         provider: 'pollinations',
         apiModel: 'qwen-coder-large',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' },
-          { provider: 'pollinations', apiModel: 'deepseek', displayName: 'DeepSeek' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'qwen-coder': {
@@ -1596,18 +673,19 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'qwen-coder',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI Fast' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'gemini-large': {
         displayName: 'Gemini Large',
-        provider: 'pollinations',
-        apiModel: 'gemini-large',
+        provider: 'google',
+        apiModel: 'gemini-3-flash-preview',
+        useResolved: true,
         fallbacks: [
-          { provider: 'google', apiModel: 'gemini-2.5-flash', displayName: 'Google Gemini 2.5 Flash' },
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large (Pollinations)' },
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'deepseek': {
@@ -1615,18 +693,19 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'deepseek',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'qwen-vision': {
         displayName: 'Qwen Vision',
-        provider: 'pollinations',
-        apiModel: 'qwen-vision',
+        provider: 'google',
+        apiModel: 'gemini-3-flash-preview',
+        useResolved: true,
         fallbacks: [
-          { provider: 'google', apiModel: 'gemini-2.5-flash', displayName: 'Google Gemini 2.5 Flash' },
-          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'pollinations', apiModel: 'qwen-vision', displayName: 'Qwen Vision' },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'gemini-search': {
@@ -1634,8 +713,9 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'gemini-search',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' },
-          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' }
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'openai-large': {
@@ -1643,8 +723,9 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'openai-large',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'mistral-large', displayName: 'Mistral Large' },
-          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'openai-fast': {
@@ -1652,17 +733,17 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'openai-fast',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI' },
-          { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-20b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'mistral-large': {
         displayName: 'Mistral Large',
-        provider: 'pollinations',
-        apiModel: 'mistral-large',
+        provider: 'mistral',
+        apiModel: 'mistral-large-latest',
         fallbacks: [
-          { provider: 'mistral', apiModel: 'mistral-large-latest', displayName: 'Mistral Large (Key)' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'pollinations', apiModel: 'mistral-large', displayName: 'Mistral Large (Backup)' },
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true }
         ]
       },
       'grok-large': {
@@ -1670,8 +751,8 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'grok-large',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'deepseek', displayName: 'DeepSeek' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'claude-sonnet': {
@@ -1679,8 +760,9 @@ omniroute &amp;</pre>
         provider: 'local',
         apiModel: 'claude-3-5-sonnet-latest',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'claude-haiku': {
@@ -1688,35 +770,8 @@ omniroute &amp;</pre>
         provider: 'local',
         apiModel: 'claude-3-5-haiku-latest',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'openai-fast', displayName: 'OpenAI Fast' },
-          { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' }
-        ]
-      },
-      'groq-llama-3.3-70b': {
-        displayName: 'Groq Llama 3.3 70B',
-        provider: 'groq',
-        apiModel: 'llama-3.3-70b-versatile',
-        fallbacks: [
-          { provider: 'pollinations', apiModel: 'openai-fast', displayName: 'OpenAI Fast' },
-          { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' }
-        ]
-      },
-      'google-gemini-2.5-flash': {
-        displayName: 'Google Gemini 2.5 Flash',
-        provider: 'google',
-        apiModel: 'gemini-2.5-flash',
-        fallbacks: [
-          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' },
-          { provider: 'pollinations', apiModel: 'qwen-vision', displayName: 'Qwen Vision' }
-        ]
-      },
-      'mistral-small': {
-        displayName: 'Mistral Small',
-        provider: 'mistral',
-        apiModel: 'mistral-small-latest',
-        fallbacks: [
-          { provider: 'pollinations', apiModel: 'mistral', displayName: 'Mistral' },
-          { provider: 'pollinations', apiModel: 'openai-fast', displayName: 'OpenAI Fast' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-20b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'deepseek-r1': {
@@ -1724,8 +779,9 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'deepseek-r1',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'deepseek', displayName: 'DeepSeek' },
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'qwen-2.5-72b': {
@@ -1733,58 +789,9 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'qwen-2.5-72b',
         fallbacks: [
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
-      }
-    };
-
-    const PROVIDERS = {
-      pollinations: {
-        id: 'pollinations',
-        name: 'Pollinations AI (Keyless Default)',
-        shortName: 'Pollinations',
-        endpoint: POLLINATIONS_ENDPOINT,
-        keyless: true,
-        placeholder: 'No key required (Always Active)',
-        testModel: 'openai-fast'
-      },
-      google: {
-        id: 'google',
-        name: 'Google AI Studio (Gemini 1M Context)',
-        shortName: 'Google AI',
-        endpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-        keyless: false,
-        placeholder: 'AIza... (from aistudio.google.com)',
-        testModel: 'gemini-2.5-flash'
-      },
-      groq: {
-        id: 'groq',
-        name: 'Groq Cloud (Ultra-Fast LPU)',
-        shortName: 'Groq',
-        endpoint: 'https://api.groq.com/openai/v1/chat/completions',
-        keyless: false,
-        placeholder: 'gsk_... (from console.groq.com)',
-        testModel: 'llama-3.3-70b-versatile'
-      },
-      mistral: {
-        id: 'mistral',
-        name: 'Mistral AI (Large & Small)',
-        shortName: 'Mistral',
-        endpoint: 'https://api.mistral.ai/v1/chat/completions',
-        keyless: false,
-        placeholder: 'Mistral API Key (from console.mistral.ai)',
-        testModel: 'mistral-small-latest'
-      },
-      local: {
-        id: 'local',
-        name: 'Local OmniRoute / FreeLLMAPI',
-        shortName: 'OmniRoute',
-        endpoint: 'http://localhost:20128/v1/chat/completions',
-        keyless: true,
-        hasCustomUrl: true,
-        placeholder: 'OmniRoute / Unified API Key (sk-...)',
-        testModel: 'pollinations/qwen-coder'
       }
     };
 
@@ -1799,21 +806,20 @@ When analyzing past question papers and syllabus units:
 1. Rank repeated topics by exact frequency across the uploaded papers (e.g. "MUST PREPARE — 8/10 papers", "VERY LIKELY — 5/10 papers", "GOOD TO PREPARE — 3/10 papers").
 2. Build a COMPLETE, self-contained, interactive dark-mode single-file HTML study guide (\`\`\`html) using warm dark colors (#141413 background, #1f1e1c cards, #2e2c29 borders, #d97757 terracotta accents) so the student can tap the "Live Preview" button on their phone.
 3. Inside the HTML study guide, include:
-   - Clickable filter tabs for Units (Unit I to Unit V) and numbered Topic buttons (1 to 10+).
-   - Color-coded frequency badges (e.g. "8/10 papers", "Must prepare", "Very likely").
-   - Concise 2-mark definitions, complete C/Java/Python syntax blocks with comments, diagrams, and step-by-step solved numericals (such as Banker's Need matrices, CPU Scheduling Gantt charts, disk head movement sequences, and page fault tables).
+  - Clickable filter tabs for Units (Unit I to Unit V) and numbered Topic buttons (1 to 10+).
+  - Color-coded frequency badges (e.g. "8/10 papers", "Must prepare", "Very likely").
+  - Concise 2-mark definitions, complete C/Java/Python syntax blocks, diagrams, and step-by-step solved numericals.
 4. Ensure all JavaScript tab switching works cleanly on mobile touchscreens.`,
       chat: `You are OmniClaude Mobile, a clear, concise, and helpful AI assistant. Format answers cleanly with Markdown.`
     };
 
     const STORAGE_KEY = 'omniclaude_autorouter_v4';
 
-    // ==================== 3. APPLICATION STATE ====================
     let state = {
-      demoMode: false, // Live Mode active by default
-      workspaceMode: 'study', // 'code' | 'study' | 'chat'
-      selectedModel: 'auto', // Default: Smart Auto-Router
-      customModelId: 'pollinations/qwen-coder-large',
+      demoMode: false,
+      workspaceMode: 'study',
+      selectedModel: 'auto',
+      customModelId: 'openai/gpt-oss-120b',
       keys: {
         pollinations: '',
         google: '',
@@ -1821,7 +827,14 @@ When analyzing past question papers and syllabus units:
         mistral: '',
         local: ''
       },
-      localEndpoint: 'http://localhost:20128/v1/chat/completions',
+      resolvedModels: {
+        groq: '',
+        google: '',
+        mistral: '',
+        pollinations: '',
+        local: ''
+      },
+      localEndpoint: '',
       providerHealth: {
         pollinations: 'ready',
         google: 'untested',
@@ -1834,7 +847,7 @@ When analyzing past question papers and syllabus units:
     };
 
     let runtime = {
-      attachments: [], // { id, kind: 'pdf' | 'scanned-pdf' | 'code' | 'image', name, text, pageCount, renderedPageCount, charCount, images }
+      attachments: [],
       currentRouteDecision: null,
       isGenerating: false,
       abortController: null,
@@ -1843,139 +856,162 @@ When analyzing past question papers and syllabus units:
       codeBlockStore: {}
     };
 
-    // ==================== 4. INTELLIGENT REAL-TIME PROMPT CLASSIFIER ====================
+    function normalizeApiKey(providerId, rawKey) {
+      let key = (rawKey || '').trim();
+      if (providerId === 'groq' && /^gsk_/i.test(key)) {
+        key = 'gsk_' + key.slice(4);
+      }
+      return key;
+    }
+
+    function resolveProviderModel(providerId, fallbackModel) {
+      return state.resolvedModels[providerId] || fallbackModel || PROVIDERS[providerId]?.testModel || 'openai';
+    }
+
+    function buildKeyedBackupTail(preferGoogleFirst = false) {
+      const hasGoogle = Boolean((state.keys.google || '').trim());
+      const hasGroq = Boolean((state.keys.groq || '').trim());
+      const hasMistral = Boolean((state.keys.mistral || '').trim());
+      const list = [];
+
+      const pushGoogle = () => {
+        if (!hasGoogle) return;
+        const primary = resolveProviderModel('google', 'gemini-3-flash-preview');
+        list.push({ provider: 'google', apiModel: primary, displayName: `Google AI (${primary})`, useResolved: true });
+        PROVIDERS.google.candidateModels.forEach(m => {
+          if (m !== primary) list.push({ provider: 'google', apiModel: m, displayName: `Google AI (${m})` });
+        });
+      };
+
+      const pushGroq = () => {
+        if (!hasGroq) return;
+        const primary = resolveProviderModel('groq', 'openai/gpt-oss-120b');
+        list.push({ provider: 'groq', apiModel: primary, displayName: `Groq (${primary})`, useResolved: true });
+        PROVIDERS.groq.candidateModels.forEach(m => {
+          if (m !== primary) list.push({ provider: 'groq', apiModel: m, displayName: `Groq (${m})` });
+        });
+      };
+
+      if (preferGoogleFirst) {
+        pushGoogle();
+        pushGroq();
+      } else {
+        pushGroq();
+        pushGoogle();
+      }
+
+      if (hasMistral) {
+        const primary = resolveProviderModel('mistral', 'mistral-small-latest');
+        list.push({ provider: 'mistral', apiModel: primary, displayName: `Mistral (${primary})`, useResolved: true });
+      }
+
+      return list;
+    }
+
+    function dedupeCandidates(chain) {
+      const seen = new Set();
+      return chain.filter(item => {
+        const k = `${item.provider}::${item.apiModel}`;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+    }
+
     function classifyPromptIntent(promptText, attachments, workspaceMode) {
       const text = (promptText || '').trim();
       const atts = Array.isArray(attachments) ? attachments : [];
       const hasGoogleKey = Boolean((state.keys.google || '').trim());
       const hasGroqKey = Boolean((state.keys.groq || '').trim());
 
-      // Check attachment characteristics
       const hasImageAttachment = atts.some(a => a.kind === 'image' || a.kind === 'scanned-pdf');
       const pdfAttachments = atts.filter(a => a.kind === 'pdf' || a.kind === 'scanned-pdf');
       const totalExtractedChars = atts.reduce((sum, a) => sum + (a.charCount || 0), 0);
       const hasCodeAttachment = atts.some(a => a.kind === 'code' && /\.(py|js|ts|jsx|tsx|html|css|java|c|cpp|sql|json|sh)$/i.test(a.name));
 
-      // Priority 1: Vision (images, scanned-PDF canvas pages, or screenshot/diagram keywords)
       const visionRegex = /\b(screenshot|photo|image|picture|diagram|read this image|analyze image|scanned|ocr|ui image|error image)\b/i;
       if (hasImageAttachment || visionRegex.test(text)) {
-        const chain = [];
-        if (hasGoogleKey) {
-          chain.push({ provider: 'google', apiModel: 'gemini-2.5-flash', displayName: 'Google Gemini 2.5 Flash' });
-        }
-        chain.push(
+        const chain = dedupeCandidates([
+          ...buildKeyedBackupTail(true),
           { provider: 'pollinations', apiModel: 'qwen-vision', displayName: 'Qwen Vision' },
-          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
-        );
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]);
         return {
-          modelKey: 'qwen-vision',
-          displayName: hasGoogleKey ? 'Google Gemini 2.5 Flash' : 'Qwen Vision',
+          modelKey: hasGoogleKey ? 'google-gemini' : 'qwen-vision',
+          displayName: hasGoogleKey ? 'Google Gemini Flash' : 'Qwen Vision',
           reason: 'Vision & Image Analysis',
           fallbackChain: chain
         };
       }
 
-      // Priority 2: 1M Long-Context / Multi-PDF (> 8,000 chars or >= 2 PDFs)
       if (totalExtractedChars > 8000 || pdfAttachments.length >= 2) {
-        const chain = [];
-        if (hasGoogleKey) {
-          chain.push({ provider: 'google', apiModel: 'gemini-2.5-flash', displayName: 'Google Gemini 2.5 Flash' });
-        }
-        chain.push(
+        const chain = dedupeCandidates([
+          ...buildKeyedBackupTail(true),
           { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' },
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
-        );
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]);
         return {
-          modelKey: 'gemini-large',
-          displayName: hasGoogleKey ? 'Google Gemini 2.5 Flash' : 'Gemini Large',
+          modelKey: hasGoogleKey ? 'google-gemini' : 'gemini-large',
+          displayName: hasGoogleKey ? 'Google Gemini Flash' : 'Gemini Large',
           reason: '1M Context Multi-PDF Analysis',
           fallbackChain: chain
         };
       }
 
-      // Priority 3: Live Web Search (temporal / real-time search keywords)
       const searchRegex = /\b(latest|2026|today|current|news|price|search|weather|release date|live|aaj|abhi)\b/i;
       if (searchRegex.test(text)) {
+        const chain = dedupeCandidates([
+          ...buildKeyedBackupTail(true),
+          { provider: 'pollinations', apiModel: 'gemini-search', displayName: 'Gemini Search' },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]);
         return {
-          modelKey: 'gemini-search',
-          displayName: 'Gemini Search',
-          reason: 'Live Web Search',
-          fallbackChain: [
-            { provider: 'pollinations', apiModel: 'gemini-search', displayName: 'Gemini Search' },
-            { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' },
-            { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' }
-          ]
+          modelKey: hasGoogleKey ? 'google-gemini' : 'gemini-search',
+          displayName: hasGoogleKey ? 'Google Gemini Flash' : (hasGroqKey ? 'Groq Cloud' : 'Gemini Search'),
+          reason: 'Live Info & Fast Search',
+          fallbackChain: chain
         };
       }
 
-      // Priority 4: Heavy Math, Exam Numericals & Algorithms
       const mathAlgoRegex = /\b(numerical|numericals|banker'?s?\s*algorithm|gantt\s*chart|page\s*replacement|sstf|fcfs|sjf|deadlock|semaphore|calculate|solve\s*step\s*by\s*step|equation|matrix|time\s*complexity|dynamic\s*programming|prove|disk\s*scheduling)\b/i;
       if (mathAlgoRegex.test(text)) {
+        const chain = dedupeCandidates([
+          ...buildKeyedBackupTail(false),
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]);
         return {
-          modelKey: 'deepseek',
-          displayName: 'DeepSeek',
+          modelKey: hasGroqKey ? 'groq-fast' : (hasGoogleKey ? 'google-gemini' : 'openai-large'),
+          displayName: hasGroqKey ? 'Groq Cloud' : (hasGoogleKey ? 'Google Gemini Flash' : 'OpenAI'),
           reason: 'Step-by-Step Numericals & Logic',
-          fallbackChain: [
-            { provider: 'pollinations', apiModel: 'deepseek', displayName: 'DeepSeek' },
-            { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-            { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
-          ]
+          fallbackChain: chain
         };
       }
 
-      // Priority 5: Coding, Debugging & Interactive Study UI
       const codingUiRegex = /\b(code|program|syntax|html|css|javascript|python|java|c\+\+|cpp|sql|bug|fix|build|app|interactive\s*guide|study\s*guide|script|function)\b/i;
       if (workspaceMode === 'code' || workspaceMode === 'study' || hasCodeAttachment || codingUiRegex.test(text)) {
+        const chain = dedupeCandidates([
+          ...buildKeyedBackupTail(false),
+          { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' },
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+        ]);
         return {
-          modelKey: 'qwen-coder-large',
-          displayName: 'Qwen Coder Large',
+          modelKey: hasGroqKey ? 'groq-fast' : (hasGoogleKey ? 'google-gemini' : 'qwen-coder'),
+          displayName: hasGroqKey ? 'Groq Cloud' : (hasGoogleKey ? 'Google Gemini Flash' : 'Qwen Coder'),
           reason: 'Coding & Interactive UI',
-          fallbackChain: [
-            { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-            { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' },
-            { provider: 'pollinations', apiModel: 'deepseek', displayName: 'DeepSeek' }
-          ]
+          fallbackChain: chain
         };
       }
 
-      // Priority 6: Quick Short Questions (< 75 chars, no attachments)
-      if (text.length > 0 && text.length < 75 && atts.length === 0) {
-        if (hasGroqKey) {
-          return {
-            modelKey: 'groq-llama-3.3-70b',
-            displayName: 'Groq Llama 3.3 70B',
-            reason: 'Ultra-Fast Quick Reply',
-            fallbackChain: [
-              { provider: 'groq', apiModel: 'llama-3.3-70b-versatile', displayName: 'Groq Llama 3.3 70B' },
-              { provider: 'pollinations', apiModel: 'openai-fast', displayName: 'OpenAI Fast' },
-              { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' }
-            ]
-          };
-        }
-        return {
-          modelKey: 'openai-fast',
-          displayName: 'OpenAI Fast',
-          reason: 'Ultra-Fast Quick Reply',
-          fallbackChain: [
-            { provider: 'pollinations', apiModel: 'openai-fast', displayName: 'OpenAI Fast' },
-            { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI' },
-            { provider: 'pollinations', apiModel: 'qwen-coder', displayName: 'Qwen Coder' }
-          ]
-        };
-      }
-
-      // Priority 7: General Balanced Chat (Default Fallback)
+      const chain = dedupeCandidates([
+        ...buildKeyedBackupTail(false),
+        { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' },
+        { provider: 'pollinations', apiModel: 'openai-fast', displayName: 'OpenAI Fast (Backup)' }
+      ]);
       return {
-        modelKey: 'openai-large',
-        displayName: 'OpenAI Large',
-        reason: 'Balanced General Knowledge',
-        fallbackChain: [
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' },
-          { provider: 'pollinations', apiModel: 'mistral-large', displayName: 'Mistral Large' },
-          { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large' }
-        ]
+        modelKey: hasGroqKey ? 'groq-fast' : (hasGoogleKey ? 'google-gemini' : 'openai-fast'),
+        displayName: hasGroqKey ? 'Groq Cloud' : (hasGoogleKey ? 'Google Gemini Flash' : 'OpenAI Fast'),
+        reason: text.length > 0 && text.length < 75 ? 'Ultra-Fast Quick Reply' : 'Balanced General Knowledge',
+        fallbackChain: chain
       };
     }
 
@@ -2012,14 +1048,12 @@ When analyzing past question papers and syllabus units:
 
     function handleRoutingLockOrReset() {
       if (state.selectedModel === 'auto') {
-        // Lock the currently auto-picked model into the top dropdown
-        const pickedKey = runtime.currentRouteDecision?.modelKey || 'qwen-coder-large';
-        state.selectedModel = MODEL_REGISTRY[pickedKey] ? pickedKey : 'qwen-coder-large';
+        const pickedKey = runtime.currentRouteDecision?.modelKey || 'groq-fast';
+        state.selectedModel = MODEL_REGISTRY[pickedKey] ? pickedKey : 'groq-fast';
         saveState();
         syncAllUI();
         showToast(`Locked to ${MODEL_REGISTRY[state.selectedModel].displayName}`, 'info');
       } else {
-        // Switch back to Smart Auto-Router
         state.selectedModel = 'auto';
         saveState();
         syncAllUI();
@@ -2035,7 +1069,6 @@ When analyzing past question papers and syllabus units:
       }
     }
 
-    // ==================== 5. INITIALIZATION & STORAGE ====================
     function initApp() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -2045,8 +1078,16 @@ When analyzing past question papers and syllabus units:
             ...state,
             ...parsed,
             keys: { ...state.keys, ...(parsed.keys || {}) },
+            resolvedModels: { ...state.resolvedModels, ...(parsed.resolvedModels || {}) },
             providerHealth: { ...state.providerHealth, ...(parsed.providerHealth || {}) }
           };
+          state.keys.groq = normalizeApiKey('groq', state.keys.groq);
+          if (location.protocol === 'https:' && /^http:\/\/localhost:20128/i.test(state.localEndpoint || '')) {
+            state.localEndpoint = '';
+          }
+          if (state.selectedModel && state.selectedModel !== 'auto' && state.selectedModel !== 'custom' && !MODEL_REGISTRY[state.selectedModel]) {
+            state.selectedModel = 'auto';
+          }
         }
       } catch (err) {
         console.error('Failed to restore state:', err);
@@ -2071,12 +1112,9 @@ When analyzing past question papers and syllabus units:
       }
     }
 
-    // ==================== 6. UI SYNCHRONIZATION ====================
     function syncAllUI() {
       const selectEl = document.getElementById('header-model-select');
-      if (selectEl) {
-        selectEl.value = state.selectedModel || 'auto';
-      }
+      if (selectEl) selectEl.value = state.selectedModel || 'auto';
 
       const customBar = document.getElementById('custom-model-bar');
       const customInp = document.getElementById('inline-custom-model-input');
@@ -2089,15 +1127,12 @@ When analyzing past question papers and syllabus units:
         customBar.classList.add('hidden');
       }
 
-      // Workspace mode segmented buttons
       ['code', 'study', 'chat'].forEach(m => {
         const btn = document.getElementById(`mode-btn-${m}`);
         if (!btn) return;
-        if (state.workspaceMode === m) {
-          btn.className = 'px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-ocAccent text-[#141413] shadow-xs transition';
-        } else {
-          btn.className = 'px-2.5 py-1 rounded-lg text-[11px] font-medium text-ocMuted hover:text-white transition';
-        }
+        btn.className = state.workspaceMode === m
+          ? 'px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-ocAccent text-[#141413] shadow-xs transition'
+          : 'px-2.5 py-1 rounded-lg text-[11px] font-medium text-ocMuted hover:text-white transition';
       });
 
       const inputEl = document.getElementById('chat-input');
@@ -2109,7 +1144,6 @@ When analyzing past question papers and syllabus units:
         inputEl.placeholder = 'Ask anything — Auto-Router picks the best model...';
       }
 
-      // Live / Demo pill
       const dlDot = document.getElementById('demo-live-dot');
       const dlLabel = document.getElementById('demo-live-label');
       if (state.demoMode) {
@@ -2171,7 +1205,6 @@ When analyzing past question papers and syllabus units:
       showToast(state.demoMode ? 'Offline Demo Mode active' : 'Live Auto-Router active', 'info');
     }
 
-    // ==================== 7. MULTI-PDF PARSER & SCANNED-PDF CANVAS FALLBACK ====================
     async function handleUniversalFilesSelected(event) {
       const files = Array.from(event.target.files || []);
       event.target.value = '';
@@ -2196,7 +1229,6 @@ When analyzing past question papers and syllabus units:
 
         try {
           const lowerName = file.name.toLowerCase();
-
           if (lowerName.endsWith('.pdf') || file.type === 'application/pdf') {
             const pdfItem = await parseSinglePdfFile(file, (pIdx, totalP) => {
               const subPct = Math.round(((i + pIdx / Math.max(totalP, 1)) / files.length) * 100);
@@ -2231,7 +1263,6 @@ When analyzing past question papers and syllabus units:
             });
           }
         } catch (err) {
-          console.error('File parse error:', file.name, err);
           showToast(`Could not read ${file.name}: ${err.message}`, 'error');
         }
       }
@@ -2253,10 +1284,7 @@ When analyzing past question papers and syllabus units:
     }
 
     async function parseSinglePdfFile(file, onPageProgress) {
-      if (!window.pdfjsLib) {
-        throw new Error('PDF.js engine still loading — check connection.');
-      }
-
+      if (!window.pdfjsLib) throw new Error('PDF.js engine still loading — check connection.');
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const totalPages = pdf.numPages;
@@ -2267,15 +1295,12 @@ When analyzing past question papers and syllabus units:
         const page = await pdf.getPage(p);
         const textContent = await page.getTextContent();
         const pageStr = textContent.items.map(item => item.str).join(' ').replace(/\s+/g, ' ').trim();
-        if (pageStr) {
-          pageTexts.push(`[Page ${p}]\n${pageStr}`);
-        }
+        if (pageStr) pageTexts.push(`[Page ${p}]\n${pageStr}`);
       }
 
       const combinedText = pageTexts.join('\n\n');
       const nonSpaceChars = combinedText.replace(/\s+/g, '').length;
 
-      // Scanned-PDF Canvas-to-Image Vision Fallback when extracted text < 40 chars
       if (nonSpaceChars < 40) {
         const pagesToRender = Math.min(totalPages, 3);
         const renderedImages = [];
@@ -2290,7 +1315,6 @@ When analyzing past question papers and syllabus units:
           offscreenCanvas.height = viewport.height;
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-
           await page.render({ canvasContext: ctx, viewport }).promise;
           renderedImages.push(offscreenCanvas.toDataURL('image/jpeg', 0.82));
         }
@@ -2372,7 +1396,6 @@ When analyzing past question papers and syllabus units:
           const metaText = att.kind === 'scanned-pdf'
             ? `Scanned PDF • ${att.renderedPageCount}/${att.pageCount} pages`
             : `${att.pageCount} ${att.pageCount === 1 ? 'page' : 'pages'} • ${formatCompactChars(att.charCount)} chars`;
-
           return `
             <div onclick="openInspectModal('${att.id}')" class="cursor-pointer inline-flex items-center gap-2.5 bg-ocCard hover:bg-ocElevated border border-ocBorder hover:border-ocAccent/50 rounded-xl px-2.5 py-2 transition shadow-xs max-w-[235px]">
               <span class="px-1.5 py-0.5 rounded-md bg-ocAccent/20 border border-ocAccent/45 text-ocAccent font-mono font-bold text-[10px] shrink-0">PDF</span>
@@ -2386,7 +1409,6 @@ When analyzing past question papers and syllabus units:
             </div>
           `;
         }
-
         if (att.kind === 'image') {
           return `
             <div onclick="openInspectModal('${att.id}')" class="cursor-pointer inline-flex items-center gap-2 bg-ocCard hover:bg-ocElevated border border-ocBorder rounded-xl p-1.5 pr-2 transition">
@@ -2398,7 +1420,6 @@ When analyzing past question papers and syllabus units:
             </div>
           `;
         }
-
         return `
           <div onclick="openInspectModal('${att.id}')" class="cursor-pointer inline-flex items-center gap-2 bg-ocCard hover:bg-ocElevated border border-ocBorder rounded-xl px-2.5 py-2 transition max-w-[210px]">
             <span class="text-ocAccent font-mono text-[11px] font-bold shrink-0">&lt;/&gt;</span>
@@ -2450,7 +1471,6 @@ When analyzing past question papers and syllabus units:
       openModal('inspect-modal');
     }
 
-    // ==================== 8. PASTE SNIPPET & STARTER PROMPTS ====================
     function openPasteSnippetModal() {
       document.getElementById('snippet-name-input').value = state.workspaceMode === 'study' ? 'syllabus.txt' : 'app.py';
       document.getElementById('snippet-code-input').value = '';
@@ -2518,7 +1538,6 @@ When analyzing past question papers and syllabus units:
       handleSendOrStop();
     }
 
-    // ==================== 9. SESSIONS & DRAWER ====================
     function toggleDrawer(open) {
       const drawer = document.getElementById('history-drawer');
       const backdrop = document.getElementById('drawer-backdrop');
@@ -2602,7 +1621,6 @@ When analyzing past question papers and syllabus units:
       }).join('');
     }
 
-    // ==================== 10. COMPOSER & SMART EXECUTION ENGINE ====================
     function autoResizeTextarea(el) {
       el.style.height = 'auto';
       el.style.height = Math.min(el.scrollHeight, 144) + 'px';
@@ -2648,9 +1666,7 @@ When analyzing past question papers and syllabus units:
     }
 
     function buildCandidateChainForRequest(promptText, attachmentsSnapshot) {
-      const isAuto = state.selectedModel === 'auto';
-
-      if (isAuto) {
+      if (state.selectedModel === 'auto') {
         const decision = classifyPromptIntent(promptText, attachmentsSnapshot, state.workspaceMode);
         return {
           isAutoRouted: true,
@@ -2660,20 +1676,26 @@ When analyzing past question papers and syllabus units:
       }
 
       if (state.selectedModel === 'custom') {
-        const rawCustom = (state.customModelId || 'qwen-coder-large').trim();
+        const rawCustom = (state.customModelId || 'openai/gpt-oss-120b').trim();
         const chain = [];
-        if (rawCustom.startsWith('pollinations/') && (state.providerHealth.local === 'healthy' || (state.keys.local || '').trim())) {
+        if ((state.keys.groq || '').trim()) {
+          chain.push({ provider: 'groq', apiModel: rawCustom, displayName: rawCustom });
+        }
+        if ((state.keys.google || '').trim()) {
+          chain.push({ provider: 'google', apiModel: rawCustom, displayName: rawCustom });
+        }
+        if ((state.localEndpoint || '').trim()) {
           chain.push({ provider: 'local', apiModel: rawCustom, displayName: rawCustom });
         }
         chain.push(
           { provider: 'pollinations', apiModel: rawCustom.replace(/^pollinations\//, ''), displayName: rawCustom },
-          { provider: 'pollinations', apiModel: 'qwen-coder-large', displayName: 'Qwen Coder Large' },
-          { provider: 'pollinations', apiModel: 'openai-large', displayName: 'OpenAI Large' }
+          ...buildKeyedBackupTail(false),
+          { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         );
         return {
           isAutoRouted: false,
           intentReason: 'Custom Model ID',
-          chain
+          chain: dedupeCandidates(chain)
         };
       }
 
@@ -2682,19 +1704,23 @@ When analyzing past question papers and syllabus units:
         return {
           isAutoRouted: false,
           intentReason: 'Manual Override',
-          chain: [{ provider: 'pollinations', apiModel: state.selectedModel, displayName: state.selectedModel }]
+          chain: dedupeCandidates([
+            { provider: 'pollinations', apiModel: state.selectedModel, displayName: state.selectedModel },
+            ...buildKeyedBackupTail(false)
+          ])
         };
       }
 
       const chain = [
-        { provider: reg.provider, apiModel: reg.apiModel, displayName: reg.displayName },
-        ...(reg.fallbacks || [])
+        { provider: reg.provider, apiModel: reg.apiModel, displayName: reg.displayName, useResolved: reg.useResolved },
+        ...(reg.fallbacks || []),
+        ...buildKeyedBackupTail(false)
       ];
 
       return {
         isAutoRouted: false,
         intentReason: 'Manual Override',
-        chain
+        chain: dedupeCandidates(chain)
       };
     }
 
@@ -2707,12 +1733,9 @@ When analyzing past question papers and syllabus units:
       const inputEl = document.getElementById('chat-input');
       const rawPrompt = inputEl.value.trim();
       const attachmentsSnapshot = [...runtime.attachments];
-
       if (!rawPrompt && attachmentsSnapshot.length === 0) return;
 
       const session = getActiveSession();
-
-      // Compile attached files & images
       let combinedDocBlocks = '';
       const allImages = [];
       const attachmentBadges = [];
@@ -2744,7 +1767,6 @@ When analyzing past question papers and syllabus units:
       const userDisplayPrompt = rawPrompt || defaultPromptText;
       const fullApiPrompt = userDisplayPrompt + combinedDocBlocks;
 
-      // Determine routing plan BEFORE clearing attachments
       const routePlan = buildCandidateChainForRequest(userDisplayPrompt, attachmentsSnapshot);
       const primaryCandidate = routePlan.chain[0];
 
@@ -2762,7 +1784,6 @@ When analyzing past question papers and syllabus units:
         timestamp: Date.now()
       });
 
-      // Reset composer & attachments
       inputEl.value = '';
       inputEl.style.height = 'auto';
       runtime.attachments = [];
@@ -2802,7 +1823,7 @@ When analyzing past question papers and syllabus units:
         if (err.name !== 'AbortError') {
           const msg = session.messages[assistantIdx];
           msg.latencySec = ((performance.now() - t0) / 1000).toFixed(1);
-          msg.content = `⚠️ **Request Error:** ${err.message}\n\n**Quick Fix:**\n- Verify your mobile internet connection.\n- If using a paid/custom key model (Claude Sonnet/Haiku, Groq, Google), ensure its key is saved in **Settings** or switch to **✨ Smart Auto-Router** for keyless failover.\n- Or toggle **Live / Demo** in the top bar for instant offline preview.`;
+          msg.content = `⚠️ **Request Error:** ${err.message}\n\n**Quick Fix:**\n- Open **Settings (⚙️)** and tap **Test Key** on **Groq Cloud** or **Google AI Studio** so the app locks onto a verified live model.\n- Verify your mobile internet connection.\n- Or toggle **Live / Demo** in the top bar for instant offline preview.`;
         }
       } finally {
         setGeneratingState(false);
@@ -2813,21 +1834,29 @@ When analyzing past question papers and syllabus units:
       }
     }
 
-    async function executeCandidateChain(session, assistantIdx, routePlan, startTime, signal) {
+    async function executeCandidateChain(session, assistantIdx, routePlan, startTime, userSignal) {
       let lastError = null;
       let attemptedCount = 0;
 
       for (let i = 0; i < routePlan.chain.length; i++) {
-        if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+        if (userSignal.aborted) throw new DOMException('Aborted', 'AbortError');
 
         const candidate = routePlan.chain[i];
         const prov = PROVIDERS[candidate.provider];
         if (!prov) continue;
 
-        // Skip non-keyless providers if user hasn't entered a key for them
-        if (!prov.keyless && !(state.keys[candidate.provider] || '').trim()) {
-          continue;
+        if (candidate.provider === 'local') {
+          const localUrl = (state.localEndpoint || '').trim();
+          if (!localUrl) continue;
+          if (location.protocol === 'https:' && localUrl.startsWith('http://')) continue;
         }
+
+        const apiKey = normalizeApiKey(candidate.provider, state.keys[candidate.provider]);
+        if (!prov.keyless && !apiKey) continue;
+
+        const targetModel = candidate.useResolved
+          ? resolveProviderModel(candidate.provider, candidate.apiModel)
+          : candidate.apiModel;
 
         const msg = session.messages[assistantIdx];
         msg.modelDisplayName = candidate.displayName;
@@ -2840,111 +1869,125 @@ When analyzing past question papers and syllabus units:
         attemptedCount++;
 
         try {
-          await streamFromProvider(session, assistantIdx, candidate.provider, candidate.apiModel, signal);
+          await streamFromProvider(session, assistantIdx, candidate.provider, targetModel, userSignal);
           msg.latencySec = ((performance.now() - startTime) / 1000).toFixed(1);
           state.providerHealth[candidate.provider] = 'healthy';
+          state.resolvedModels[candidate.provider] = targetModel;
           return;
         } catch (err) {
-          if (err.name === 'AbortError') throw err;
+          if (userSignal.aborted) throw new DOMException('Aborted', 'AbortError');
           lastError = err;
-          console.warn(`[OmniClaude Auto-Router] ${candidate.displayName} failed:`, err.message);
+          console.warn(`[OmniClaude Auto-Router] ${candidate.displayName} (${targetModel}) failed:`, err.message);
         }
       }
 
       throw lastError || new Error('All routed endpoints failed to respond.');
     }
 
-    async function streamFromProvider(session, assistantIdx, providerId, apiModel, signal) {
+    async function streamFromProvider(session, assistantIdx, providerId, apiModel, userSignal) {
       const prov = PROVIDERS[providerId];
       const msg = session.messages[assistantIdx];
-      let endpoint = prov.endpoint;
-      let targetModel = apiModel;
+      const endpoint = providerId === 'local' ? (state.localEndpoint || '').trim() : prov.endpoint;
+      const apiKey = normalizeApiKey(providerId, state.keys[providerId]);
 
-      if (providerId === 'local') {
-        endpoint = (state.localEndpoint || prov.endpoint).trim();
-      }
-
-      const apiKey = (state.keys[providerId] || '').trim();
       const headers = { 'Content-Type': 'application/json' };
-      if (apiKey) {
-        headers['Authorization'] = `Bearer ${apiKey}`;
-      }
+      if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
 
       const apiMessages = buildPayloadMessages(session, assistantIdx);
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers,
-        signal,
-        body: JSON.stringify({
-          model: targetModel,
-          messages: apiMessages,
-          stream: true
-        })
-      });
+      const attemptController = new AbortController();
+      const onUserAbort = () => attemptController.abort();
+      userSignal.addEventListener('abort', onUserAbort, { once: true });
 
-      if (!response.ok) {
-        const errBody = await response.text().catch(() => '');
-        throw new Error(`${prov.shortName} HTTP ${response.status} ${errBody.slice(0, 80)}`);
+      const connectTimer = setTimeout(() => attemptController.abort(), 15000);
+
+      let response;
+      try {
+        response = await fetch(endpoint, {
+          method: 'POST',
+          headers,
+          signal: attemptController.signal,
+          body: JSON.stringify({
+            model: apiModel,
+            messages: apiMessages,
+            stream: true
+          })
+        });
+      } catch (err) {
+        clearTimeout(connectTimer);
+        userSignal.removeEventListener('abort', onUserAbort);
+        if (userSignal.aborted) throw new DOMException('Aborted', 'AbortError');
+        throw new Error(`${prov.shortName} timed out or network failed`);
       }
 
-      const cType = (response.headers.get('content-type') || '').toLowerCase();
-      if (cType.includes('application/json') || !response.body) {
-        const data = await response.json();
-        const text = data.choices?.[0]?.message?.content || '';
-        if (!text) throw new Error(`${prov.shortName} returned empty content`);
-        msg.content = text;
-        updateStreamingBody(assistantIdx, text);
-        return;
-      }
+      clearTimeout(connectTimer);
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let buffer = '';
-      let gotChunk = false;
+      try {
+        if (!response.ok) {
+          const errBody = await response.text().catch(() => '');
+          throw new Error(`${prov.shortName} HTTP ${response.status} ${errBody.slice(0, 90)}`);
+        }
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        const cType = (response.headers.get('content-type') || '').toLowerCase();
+        if (cType.includes('application/json') || !response.body) {
+          const data = await response.json();
+          const text = data.choices?.[0]?.message?.content || '';
+          if (!text) throw new Error(`${prov.shortName} returned empty content`);
+          msg.content = text;
+          updateStreamingBody(assistantIdx, text);
+          return;
+        }
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buffer = '';
+        let gotChunk = false;
 
-        for (const rawLine of lines) {
-          const line = rawLine.trim();
-          if (!line) continue;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-          if (line.startsWith('{') && !gotChunk) {
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const rawLine of lines) {
+            const line = rawLine.trim();
+            if (!line) continue;
+
+            if (line.startsWith('{') && !gotChunk) {
+              try {
+                const single = JSON.parse(line);
+                const content = single.choices?.[0]?.message?.content;
+                if (content) {
+                  msg.content = content;
+                  updateStreamingBody(assistantIdx, content);
+                  return;
+                }
+              } catch (_) {}
+            }
+
+            if (!line.startsWith('data:')) continue;
+            const payload = line.slice(5).trim();
+            if (payload === '[DONE]') return;
+
             try {
-              const single = JSON.parse(line);
-              const content = single.choices?.[0]?.message?.content;
-              if (content) {
-                msg.content = content;
-                updateStreamingBody(assistantIdx, content);
-                return;
+              const parsed = JSON.parse(payload);
+              const delta = parsed.choices?.[0]?.delta?.content || parsed.choices?.[0]?.message?.content || '';
+              if (delta) {
+                gotChunk = true;
+                msg.content += delta;
+                updateStreamingBody(assistantIdx, msg.content);
               }
             } catch (_) {}
           }
-
-          if (!line.startsWith('data:')) continue;
-          const payload = line.slice(5).trim();
-          if (payload === '[DONE]') return;
-
-          try {
-            const parsed = JSON.parse(payload);
-            const delta = parsed.choices?.[0]?.delta?.content || parsed.choices?.[0]?.message?.content || '';
-            if (delta) {
-              gotChunk = true;
-              msg.content += delta;
-              updateStreamingBody(assistantIdx, msg.content);
-            }
-          } catch (_) {}
         }
-      }
 
-      if (!msg.content.trim()) {
-        throw new Error(`${prov.shortName} stream ended with empty output`);
+        if (!msg.content.trim()) {
+          throw new Error(`${prov.shortName} stream ended with empty output`);
+        }
+      } finally {
+        userSignal.removeEventListener('abort', onUserAbort);
       }
     }
 
@@ -2980,7 +2023,6 @@ When analyzing past question papers and syllabus units:
       }
     }
 
-    // ==================== 11. OFFLINE DEMO STREAMER ====================
     async function runDemoStream(session, assistantIdx, prompt, badges, signal) {
       const msg = session.messages[assistantIdx];
       const reply = buildDemoReply(prompt, badges, msg.modelDisplayName);
@@ -2996,13 +2038,11 @@ When analyzing past question papers and syllabus units:
 
     function buildDemoReply(prompt, badges, routedModelName) {
       if (state.workspaceMode === 'study' || (badges && badges.some(b => b.kind.includes('PDF')))) {
-        return `Auto-routed to **${routedModelName}**! Tap **Live Preview** on the interactive study guide below to test clickable Unit tabs, frequency badges, and solved numericals:\n\n\`\`\`html\n<!-- exam_study_guide.html -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>Interactive Exam Study Guide</title>\n  <style>\n    body { font-family: system-ui, sans-serif; background: #141413; color: #f2f0ea; margin: 0; padding: 16px; }\n    .wrap { max-width: 720px; margin: 0 auto; }\n    h1 { font-size: 18px; margin: 0 0 12px; }\n    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }\n    .tab { padding: 8px 12px; border-radius: 10px; border: 1px solid #2e2c29; background: #1f1e1c; color: #f2f0ea; font-size: 12px; cursor: pointer; }\n    .tab.active { background: #d97757; color: #141413; font-weight: 700; border-color: #d97757; }\n    .card { background: #1f1e1c; border: 1px solid #2e2c29; border-radius: 14px; padding: 16px; margin-bottom: 12px; }\n    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(217,119,87,0.18); color: #d97757; margin-bottom: 6px; }\n    pre { background: #0e0e0d; padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 12px; color: #a3be8c; }\n  </style>\n</head>\n<body>\n  <div class="wrap">\n    <h1>70-Mark Exam — High-Frequency Study Guide</h1>\n    <div class="tabs">\n      <button class="tab active" onclick="showTab(0, this)">1. Peterson's Solution</button>\n      <button class="tab" onclick="showTab(1, this)">2. Banker's Algorithm</button>\n      <button class="tab" onclick="showTab(2, this)">3. Page Replacement</button>\n    </div>\n    <div id="content"></div>\n  </div>\n  <script>\n    const TOPICS = [\n      { badge: "MUST PREPARE • 8/10 papers", title: "Peterson's Solution (Critical Section)", desc: "Satisfies Mutual Exclusion, Progress, and Bounded Waiting for 2 processes.", code: "flag[i] = true;\\nturn = j;\\nwhile (flag[j] && turn == j);\\n// Critical Section\\nflag[i] = false;" },\n      { badge: "MUST PREPARE • 7/10 papers", title: "Banker's Algorithm (Deadlock Avoidance)", desc: "Step 1: Compute Need = Max - Allocation. Step 2: Safe Sequence P1 -> P3 -> P4 -> P0 -> P2.", code: "Need[i][j] = Max[i][j] - Allocation[i][j]\\nCheck: Need[i] <= Work" },\n      { badge: "VERY LIKELY • 8/10 papers", title: "LRU & Optimal Page Replacement", desc: "Reference string: 7, 0, 1, 2, 0, 3, 0, 4. Mark every miss with F.", code: "FIFO Faults = 15 | LRU = 12 | Optimal = 9" }\n    ];\n    function showTab(idx, btn) {\n      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));\n      if (btn) btn.classList.add('active');\n      const t = TOPICS[idx];\n      document.getElementById('content').innerHTML = '<div class="card"><span class="badge">' + t.badge + '</span><h2>' + t.title + '</h2><p>' + t.desc + '</p><pre>' + t.code + '</pre></div>';\n    }\n    showTab(0);\n  <\/script>\n</body>\n</html>\n\`\`\``;
+        return `Auto-routed to **${routedModelName}**! Tap **Live Preview** on the interactive study guide below:\n\n\`\`\`html\n<!-- exam_study_guide.html -->\n<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>Interactive Exam Study Guide</title>\n  <style>\n    body { font-family: system-ui, sans-serif; background: #141413; color: #f2f0ea; margin: 0; padding: 16px; }\n    .wrap { max-width: 720px; margin: 0 auto; }\n    h1 { font-size: 18px; margin: 0 0 12px; }\n    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }\n    .tab { padding: 8px 12px; border-radius: 10px; border: 1px solid #2e2c29; background: #1f1e1c; color: #f2f0ea; font-size: 12px; cursor: pointer; }\n    .tab.active { background: #d97757; color: #141413; font-weight: 700; border-color: #d97757; }\n    .card { background: #1f1e1c; border: 1px solid #2e2c29; border-radius: 14px; padding: 16px; margin-bottom: 12px; }\n    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(217,119,87,0.18); color: #d97757; margin-bottom: 6px; }\n    pre { background: #0e0e0d; padding: 12px; border-radius: 10px; overflow-x: auto; font-size: 12px; color: #a3be8c; }\n  </style>\n</head>\n<body>\n  <div class="wrap">\n    <h1>70-Mark Exam — High-Frequency Study Guide</h1>\n    <div class="tabs">\n      <button class="tab active" onclick="showTab(0, this)">1. Peterson's Solution</button>\n      <button class="tab" onclick="showTab(1, this)">2. Banker's Algorithm</button>\n      <button class="tab" onclick="showTab(2, this)">3. Page Replacement</button>\n    </div>\n    <div id="content"></div>\n  </div>\n  <script>\n    const TOPICS = [\n      { badge: "MUST PREPARE • 8/10 papers", title: "Peterson's Solution (Critical Section)", desc: "Satisfies Mutual Exclusion, Progress, and Bounded Waiting for 2 processes.", code: "flag[i] = true;\\nturn = j;\\nwhile (flag[j] && turn == j);\\nflag[i] = false;" },\n      { badge: "MUST PREPARE • 7/10 papers", title: "Banker's Algorithm (Deadlock Avoidance)", desc: "Step 1: Compute Need = Max - Allocation. Step 2: Safe Sequence P1 -> P3 -> P4 -> P0 -> P2.", code: "Need[i][j] = Max[i][j] - Allocation[i][j]\\nCheck: Need[i] <= Work" },\n      { badge: "VERY LIKELY • 8/10 papers", title: "LRU & Optimal Page Replacement", desc: "Reference string: 7, 0, 1, 2, 0, 3, 0, 4. Mark every miss with F.", code: "FIFO Faults = 15 | LRU = 12 | Optimal = 9" }\n    ];\n    function showTab(idx, btn) {\n      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));\n      if (btn) btn.classList.add('active');\n      const t = TOPICS[idx];\n      document.getElementById('content').innerHTML = '<div class="card"><span class="badge">' + t.badge + '</span><h2>' + t.title + '</h2><p>' + t.desc + '</p><pre>' + t.code + '</pre></div>';\n    }\n    showTab(0);\n  <\/script>\n</body>\n</html>\n\`\`\``;
       }
-
-      return `**Smart Auto-Router** selected **${routedModelName}** for your prompt:\n\n> *"${prompt}"*\n\nSwitch **Demo** to **Live** in the top-right bar to stream real responses from Pollinations AI and your pooled API keys!`;
+      return `**Smart Auto-Router** selected **${routedModelName}** for your prompt:\n\n> *"${prompt}"*\n\nSwitch **Demo** to **Live** in the top-right bar to stream real responses from your saved API keys!`;
     }
 
-    // ==================== 12. RENDER ACTIVE SESSION & MESSAGE BADGES ====================
     function renderActiveSession() {
       const session = getActiveSession();
       const welcomeEl = document.getElementById('welcome-screen');
@@ -3076,8 +2116,8 @@ When analyzing past question papers and syllabus units:
     }
 
     function buildAssistantMetaHTML(msg) {
-      const mName = escapeHtml(msg.modelDisplayName || 'Qwen Coder Large');
-      const reason = escapeHtml(msg.intentReason || 'Coding & Interactive UI');
+      const mName = escapeHtml(msg.modelDisplayName || 'Groq Cloud');
+      const reason = escapeHtml(msg.intentReason || 'Smart Routing');
       const latencyPart = msg.latencySec ? ` • ${escapeHtml(msg.latencySec)}s` : '';
       const fallbackTag = msg.wasFallback
         ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">Fallback</span>`
@@ -3112,27 +2152,21 @@ When analyzing past question papers and syllabus units:
     function scrollToBottom(force = false) {
       const container = document.getElementById('chat-scroll-container');
       const dist = container.scrollHeight - container.scrollTop - container.clientHeight;
-      if (force || dist < 150) {
-        container.scrollTop = container.scrollHeight;
-      }
+      if (force || dist < 150) container.scrollTop = container.scrollHeight;
     }
 
-    // ==================== 13. MARKDOWN + SYNTAX HIGHLIGHTING + LIVE PREVIEW ====================
     function detectFilename(lang, code) {
       const firstLine = (code.split('\n')[0] || '').trim();
       const match = firstLine.match(/(?:\/\/|#|<!--|\/\*|--)\s*([a-zA-Z0-9_.-]+\.[a-zA-Z0-9]{1,6})/);
       if (match && match[1]) return match[1];
-
       const map = {
         python: 'main.py', py: 'main.py',
         html: 'study_guide.html', htm: 'study_guide.html',
         javascript: 'app.js', js: 'app.js',
         typescript: 'app.ts', ts: 'app.ts',
-        css: 'styles.css',
-        java: 'Main.java',
+        css: 'styles.css', java: 'Main.java',
         cpp: 'main.cpp', c: 'main.c',
-        sql: 'query.sql',
-        json: 'data.json'
+        sql: 'query.sql', json: 'data.json'
       };
       return map[(lang || '').toLowerCase()] || 'snippet.txt';
     }
@@ -3140,11 +2174,9 @@ When analyzing past question papers and syllabus units:
     function highlightCodeSafe(rawCode, lang) {
       let escaped = escapeHtml(rawCode);
       const l = (lang || '').toLowerCase();
-
       escaped = escaped.replace(/(\/\/[^\n]*|#[^\n]*|--[^\n]*)/g, '<span class="tok-com">$1</span>');
       escaped = escaped.replace(/(&quot;[^&]*?&quot;|&#039;[^&]*?&#039;)/g, '<span class="tok-str">$1</span>');
       escaped = escaped.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="tok-num">$1</span>');
-
       if (l === 'html' || l === 'xml') {
         escaped = escaped.replace(/(&lt;\/?[a-zA-Z0-9-]+)/g, '<span class="tok-tag">$1</span>');
       } else {
@@ -3155,7 +2187,6 @@ When analyzing past question papers and syllabus units:
 
     function renderMarkdown(raw) {
       if (!raw) return '';
-
       const blocks = [];
       const fenceRegex = /\x60\x60\x60([a-zA-Z0-9_-]*)\n?([\s\S]*?)(?:\x60\x60\x60|$)/g;
 
@@ -3166,12 +2197,7 @@ When analyzing past question papers and syllabus units:
         const lowerLang = (lang || 'text').toLowerCase();
         const isWebPreviewable = lowerLang === 'html' || lowerLang === 'htm' || filename.endsWith('.html') || cleanCode.trim().toLowerCase().startsWith('<!doctype html');
 
-        runtime.codeBlockStore[blockId] = {
-          code: cleanCode,
-          lang: lowerLang,
-          filename
-        };
-
+        runtime.codeBlockStore[blockId] = { code: cleanCode, lang: lowerLang, filename };
         blocks.push({ blockId, lang: lowerLang, filename, code: cleanCode, isWebPreviewable });
         return `@@CODE_BLOCK_${blocks.length - 1}@@`;
       });
@@ -3288,7 +2314,6 @@ When analyzing past question papers and syllabus units:
       }
     }
 
-    // ==================== 14. FULL-SCREEN SANDBOXED LIVE PREVIEW ====================
     function openLivePreview(blockId) {
       const entry = runtime.codeBlockStore[blockId];
       if (!entry) return;
@@ -3325,9 +2350,8 @@ When analyzing past question papers and syllabus units:
       document.getElementById('live-preview-iframe').srcdoc = '';
     }
 
-    // ==================== 15. SETTINGS MODAL (PROVIDERS & KEYS + APK) ====================
     function openSettingsModal(initialTab = 'providers') {
-      state.resetPending = false;
+      runtime.resetPending = false;
       document.getElementById('reset-storage-btn').textContent = 'Reset All';
       updateSettingsDemoSwitch();
       renderProviderCards();
@@ -3375,13 +2399,14 @@ When analyzing past question papers and syllabus units:
 
     function renderProviderCards() {
       const container = document.getElementById('provider-cards-list');
-      const order = ['pollinations', 'google', 'groq', 'mistral', 'local'];
+      const order = ['groq', 'google', 'mistral', 'pollinations', 'local'];
 
       container.innerHTML = order.map(pid => {
         const prov = PROVIDERS[pid];
         const health = state.providerHealth[pid] || 'untested';
+        const resolvedLabel = state.resolvedModels[pid] ? ` · ${state.resolvedModels[pid]}` : '';
         const statusBadge = pid === 'pollinations'
-          ? `<span id="prov-badge-${pid}" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">● Built-in Free</span>`
+          ? `<span id="prov-badge-${pid}" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">● Built-in Backup</span>`
           : health === 'healthy'
             ? `<span id="prov-badge-${pid}" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">● Healthy</span>`
             : health === 'error'
@@ -3389,8 +2414,8 @@ When analyzing past question papers and syllabus units:
               : `<span id="prov-badge-${pid}" class="text-[10px] px-2 py-0.5 rounded-full bg-ocElevated text-ocMuted border border-ocBorder font-medium">Optional</span>`;
 
         const urlField = prov.hasCustomUrl
-          ? `<input id="local-endpoint-input" type="url" value="${escapeHtml(state.localEndpoint)}" placeholder="http://localhost:20128/v1/chat/completions" class="w-full bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent mb-2" />`
-          : `<p class="text-[10px] font-mono text-ocMuted truncate mb-2">${escapeHtml(prov.endpoint)}</p>`;
+          ? `<input id="local-endpoint-input" type="url" value="${escapeHtml(state.localEndpoint || '')}" placeholder="Leave blank on phone (or paste HTTPS tunnel URL)" class="w-full bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent mb-2" />`
+          : `<p class="text-[10px] font-mono text-ocMuted truncate mb-2">${escapeHtml(prov.endpoint)}${escapeHtml(resolvedLabel)}</p>`;
 
         return `
           <div class="p-3.5 rounded-2xl bg-ocBg border border-ocBorder">
@@ -3410,18 +2435,66 @@ When analyzing past question papers and syllabus units:
       }).join('');
     }
 
+    async function discoverLiveModel(providerId, apiKey) {
+      const prov = PROVIDERS[providerId];
+      if (!prov.modelsEndpoint || !apiKey) return null;
+      try {
+        const res = await fetch(prov.modelsEndpoint, {
+          headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
+        if (!res.ok) return null;
+        const json = await res.json();
+        const ids = (json.data || []).map(m => String(m.id || '').replace(/^models\//, '')).filter(Boolean);
+        if (ids.length === 0) return null;
+
+        if (providerId === 'google') {
+          const valid = ids.filter(id => /gemini/i.test(id) && !/(embed|imagen|veo|tts|aqa|robotics|audio)/i.test(id));
+          return valid.find(id => /flash/i.test(id)) || valid[0] || null;
+        }
+        if (providerId === 'groq') {
+          const valid = ids.filter(id => !/(whisper|tts|guard|embed|playai|orpheus)/i.test(id));
+          return valid.find(id => /gpt-oss|llama|qwen/i.test(id)) || valid[0] || null;
+        }
+        if (providerId === 'mistral') {
+          const valid = ids.filter(id => !/embed/i.test(id));
+          return valid.find(id => /mistral-small|mistral-large/i.test(id)) || valid[0] || null;
+        }
+        return ids[0];
+      } catch (_) {
+        return null;
+      }
+    }
+
     async function testSingleProviderKey(providerId) {
       const prov = PROVIDERS[providerId];
       const badge = document.getElementById(`prov-badge-${providerId}`);
       const keyInput = document.getElementById(`prov-key-${providerId}`);
-      const apiKey = keyInput ? keyInput.value.trim() : '';
+      const apiKey = normalizeApiKey(providerId, keyInput ? keyInput.value : '');
+      if (keyInput) keyInput.value = apiKey;
       state.keys[providerId] = apiKey;
 
       let endpoint = prov.endpoint;
       if (providerId === 'local') {
         const urlEl = document.getElementById('local-endpoint-input');
-        endpoint = (urlEl?.value.trim() || prov.endpoint);
+        endpoint = (urlEl?.value || '').trim();
         state.localEndpoint = endpoint;
+        if (!endpoint) {
+          if (badge) {
+            badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-ocElevated text-ocMuted border border-ocBorder font-medium';
+            badge.textContent = 'Disabled';
+          }
+          showToast('Local OmniRoute left blank (recommended on phone)', 'info');
+          saveState();
+          return;
+        }
+        if (location.protocol === 'https:' && endpoint.startsWith('http://')) {
+          if (badge) {
+            badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30 font-medium';
+            badge.textContent = '● HTTPS Required';
+          }
+          showToast('Use an HTTPS tunnel URL on mobile; http://localhost is blocked', 'error');
+          return;
+        }
       }
 
       if (!prov.keyless && !apiKey) {
@@ -3438,25 +2511,60 @@ When analyzing past question papers and syllabus units:
         badge.textContent = 'Testing...';
       }
 
-      const t0 = performance.now();
-      try {
-        const headers = { 'Content-Type': 'application/json' };
-        if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+      const headers = { 'Content-Type': 'application/json' };
+      if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
 
+      const candidates = [...new Set([
+        state.resolvedModels[providerId],
+        ...(prov.candidateModels || [prov.testModel])
+      ].filter(Boolean))];
+
+      const t0 = performance.now();
+      let lastErrMsg = 'Connection failed';
+
+      const tryModel = async (modelId) => {
         const res = await fetch(endpoint, {
           method: 'POST',
           headers,
           body: JSON.stringify({
-            model: prov.testModel,
+            model: modelId,
             messages: [{ role: 'user', content: 'Say OK' }],
-            max_tokens: 6,
+            max_tokens: 64,
             stream: false
           })
         });
+        if (res.ok) return { ok: true, modelId };
+        return { ok: false, status: res.status };
+      };
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      try {
+        let matchedModel = null;
+
+        for (const modelId of candidates) {
+          const result = await tryModel(modelId);
+          if (result.ok) {
+            matchedModel = modelId;
+            break;
+          }
+          lastErrMsg = `HTTP ${result.status}`;
+          if (result.status === 401 || result.status === 403) {
+            throw new Error(`Invalid Key (HTTP ${result.status})`);
+          }
+        }
+
+        if (!matchedModel && prov.modelsEndpoint && apiKey) {
+          const discovered = await discoverLiveModel(providerId, apiKey);
+          if (discovered) {
+            const result = await tryModel(discovered);
+            if (result.ok) matchedModel = discovered;
+            else lastErrMsg = `HTTP ${result.status}`;
+          }
+        }
+
+        if (!matchedModel) throw new Error(lastErrMsg);
 
         const sec = ((performance.now() - t0) / 1000).toFixed(2);
+        state.resolvedModels[providerId] = matchedModel;
         state.providerHealth[providerId] = 'healthy';
         state.demoMode = false;
         saveState();
@@ -3467,7 +2575,7 @@ When analyzing past question papers and syllabus units:
           badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium';
           badge.textContent = `● Healthy (${sec}s)`;
         }
-        showToast(`${prov.name} verified in ${sec}s!`, 'info');
+        showToast(`${prov.shortName} verified (${matchedModel}) in ${sec}s!`, 'info');
       } catch (err) {
         state.providerHealth[providerId] = 'error';
         saveState();
@@ -3475,17 +2583,17 @@ When analyzing past question papers and syllabus units:
           badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30 font-medium';
           badge.textContent = `● ${err.message}`;
         }
-        showToast(`${prov.name} failed: ${err.message}`, 'error');
+        showToast(`${prov.shortName} failed: ${err.message}`, 'error');
       }
     }
 
     function saveAllSettings() {
       Object.keys(PROVIDERS).forEach(pid => {
         const el = document.getElementById(`prov-key-${pid}`);
-        if (el) state.keys[pid] = el.value.trim();
+        if (el) state.keys[pid] = normalizeApiKey(pid, el.value);
       });
       const localUrlEl = document.getElementById('local-endpoint-input');
-      if (localUrlEl && localUrlEl.value.trim()) {
+      if (localUrlEl) {
         state.localEndpoint = localUrlEl.value.trim();
       }
       saveState();
@@ -3519,6 +2627,7 @@ When analyzing past question papers and syllabus units:
         selectedModel: state.selectedModel,
         customModelId: state.customModelId,
         keys: state.keys,
+        resolvedModels: state.resolvedModels,
         localEndpoint: state.localEndpoint
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -3541,9 +2650,11 @@ When analyzing past question papers and syllabus units:
         try {
           const data = JSON.parse(String(e.target.result || '{}'));
           if (data.keys) state.keys = { ...state.keys, ...data.keys };
-          if (data.localEndpoint) state.localEndpoint = data.localEndpoint;
+          if (data.resolvedModels) state.resolvedModels = { ...state.resolvedModels, ...data.resolvedModels };
+          if (typeof data.localEndpoint === 'string') state.localEndpoint = data.localEndpoint;
           if (data.selectedModel) state.selectedModel = data.selectedModel;
           if (data.customModelId) state.customModelId = data.customModelId;
+          state.keys.groq = normalizeApiKey('groq', state.keys.groq);
           saveState();
           syncAllUI();
           renderProviderCards();
@@ -3568,8 +2679,8 @@ When analyzing past question papers and syllabus units:
 
     function handleResetStorage() {
       const btn = document.getElementById('reset-storage-btn');
-      if (!state.resetPending) {
-        state.resetPending = true;
+      if (!runtime.resetPending) {
+        runtime.resetPending = true;
         btn.textContent = 'Tap again to confirm';
         btn.classList.add('bg-red-600', 'text-white');
         return;
@@ -3578,7 +2689,6 @@ When analyzing past question papers and syllabus units:
       location.reload();
     }
 
-    // ==================== 16. UTILITIES ====================
     function genId(prefix) {
       return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     }
@@ -3655,5 +2765,5 @@ When analyzing past question papers and syllabus units:
 
     window.addEventListener('DOMContentLoaded', initApp);
   </script>
-
-</body></html>
+</body>
+</html>
