@@ -197,7 +197,7 @@
           </svg>
         </div>
         <div>
-          <h2 class="font-semibold text-sm text-white leading-tight">OmniClaude Mobile</h2>
+          <h2 class="font-semibold text-sm text-white leading-tight">OmniCode Mobile</h2>
           <p class="text-[11px] text-ocMuted">Smart Auto-Router Edition</p>
         </div>
       </div>
@@ -338,7 +338,7 @@
           </svg>
         </div>
 
-        <h1 class="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1.5">OmniClaude Mobile</h1>
+        <h1 class="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1.5">OmniCode Mobile</h1>
         <p class="text-xs sm:text-sm text-ocMuted max-w-md mb-5 leading-relaxed">
           <span class="text-ocAccent font-medium">✨ Smart Auto-Router</span> prioritizes your saved <span class="text-white">Groq</span> &amp; <span class="text-white">Google AI Studio</span> keys with instant failover across coding, exam numericals, screenshots, and multi-PDF study guides.
         </p>
@@ -476,7 +476,7 @@
       <div class="px-4 py-3.5 border-b border-ocBorder flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-ocAccent"></span>
-          <h3 class="text-base font-semibold text-white">OmniClaude Mobile Settings</h3>
+          <h3 class="text-base font-semibold text-white">OmniCode Mobile Settings</h3>
         </div>
         <button onclick="closeModal('settings-modal')" class="p-2 rounded-xl text-ocMuted hover:text-white hover:bg-ocElevated">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -538,7 +538,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
-            <span>Download omniclaude_mobile.html</span>
+            <span>Download OmniCode_mobile.html</span>
           </button>
         </div>
 
@@ -860,12 +860,12 @@ omniroute &amp;</pre>
     };
 
     const SYSTEM_PROMPTS = {
-      code: `You are OmniClaude Mobile in Code Agent mode — a senior full-stack and systems engineer.
+      code: `You are OmniCode Mobile in Code Agent mode — a senior full-stack and systems engineer.
 Rules:
 1. Deliver complete, runnable, clean code without placeholders.
 2. Wrap every file in a fenced Markdown code block (\`\`\`html, \`\`\`python, \`\`\`c, \`\`\`javascript, etc.) with the suggested filename on the first comment line.
 3. For web apps or UI requests, generate a single self-contained HTML file with inline CSS/JS so the user can launch it in the built-in Live Preview sandbox.`,
-      study: `You are OmniClaude Mobile in Exam Study Guide mode — an expert university exam strategist & educator.
+      study: `You are OmniCode Mobile in Exam Study Guide mode — an expert university exam strategist & educator.
 When analyzing past question papers and syllabus units:
 1. Rank repeated topics by exact frequency across the uploaded papers (e.g. "MUST PREPARE — 8/10 papers", "VERY LIKELY — 5/10 papers", "GOOD TO PREPARE — 3/10 papers").
 2. Build a COMPLETE, self-contained, interactive dark-mode single-file HTML study guide (\`\`\`html) using warm dark colors (#141413 background, #1f1e1c cards, #2e2c29 borders, #d97757 terracotta accents) so the student can tap the "Live Preview" button on their phone.
@@ -874,10 +874,10 @@ When analyzing past question papers and syllabus units:
   - Color-coded frequency badges (e.g. "8/10 papers", "Must prepare", "Very likely").
   - Concise 2-mark definitions, complete C/Java/Python syntax blocks, diagrams, and step-by-step solved numericals.
 4. Ensure all JavaScript tab switching works cleanly on mobile touchscreens.`,
-      chat: `You are OmniClaude Mobile, a clear, concise, and helpful AI assistant. Format answers cleanly with Markdown.`
+      chat: `You are OmniCode Mobile, a clear, concise, and helpful AI assistant. Format answers cleanly with Markdown.`
     };
 
-    const STORAGE_KEY = 'omniclaude_autorouter_v4';
+    const STORAGE_KEY = 'OmniCode_autorouter_v4';
 
     let state = {
       demoMode: false,
@@ -1512,7 +1512,7 @@ When analyzing past question papers and syllabus units:
         badge.textContent = 'SCANNED PDF';
         sub.textContent = `${att.pageCount} total pages • Rendered ${att.renderedPageCount} pages for Vision`;
         body.innerHTML = `
-          <p class="text-xs text-ocMuted">This PDF had fewer than 40 selectable characters, so OmniClaude rendered its pages as images for Vision analysis:</p>
+          <p class="text-xs text-ocMuted">This PDF had fewer than 40 selectable characters, so OmniCode rendered its pages as images for Vision analysis:</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             ${att.images.map((src, i) => `
               <div class="rounded-xl overflow-hidden border border-ocBorder bg-ocBg">
@@ -1941,7 +1941,7 @@ When analyzing past question papers and syllabus units:
         } catch (err) {
           if (userSignal.aborted) throw new DOMException('Aborted', 'AbortError');
           lastError = err;
-          console.warn(`[OmniClaude Auto-Router] ${candidate.displayName} (${targetModel}) failed:`, err.message);
+          console.warn(`[OmniCode Auto-Router] ${candidate.displayName} (${targetModel}) failed:`, err.message);
         }
       }
 
@@ -2673,12 +2673,12 @@ When analyzing past question papers and syllabus units:
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'omniclaude_mobile.html';
+        a.download = 'OmniCode_mobile.html';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast('Downloaded omniclaude_mobile.html!', 'info');
+        showToast('Downloaded OmniCode_mobile.html!', 'info');
       } catch (_) {
         showToast('Download blocked in this preview frame', 'error');
       }
@@ -2686,7 +2686,7 @@ When analyzing past question papers and syllabus units:
 
     function exportBackupJson() {
       const payload = {
-        app: 'OmniClaude Mobile (Auto-Router Edition)',
+        app: 'OmniCode Mobile (Auto-Router Edition)',
         exportedAt: new Date().toISOString(),
         selectedModel: state.selectedModel,
         customModelId: state.customModelId,
@@ -2698,12 +2698,12 @@ When analyzing past question papers and syllabus units:
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'omniclaude-keys-backup.json';
+      a.download = 'OmniCode-keys-backup.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('Exported omniclaude-keys-backup.json', 'info');
+      showToast('Exported OmniCode-keys-backup.json', 'info');
     }
 
     function importBackupJson(event) {
