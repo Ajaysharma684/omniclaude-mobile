@@ -990,7 +990,7 @@ When analyzing past question papers and syllabus units:
       }
 
       if (hasMistral) {
-        const primary = resolveProviderModel('mistral', 'mistral-small-latest');
+       const primary = resolveProviderModel('mistral', 'ministral-8b-latest');
         list.push({ provider: 'mistral', apiModel: primary, displayName: `Mistral (${primary})`, useResolved: true });
       }
 
@@ -2546,7 +2546,7 @@ When analyzing past question papers and syllabus units:
         }
         if (providerId === 'mistral') {
           const valid = ids.filter(id => !/embed/i.test(id));
-          return valid.find(id => /mistral-small|mistral-large/i.test(id)) || valid[0] || null;
+         return valid.find(id => /ministral|codestral/i.test(id)) || valid[0] || null;
         }
         return ids[0];
       } catch (_) {
