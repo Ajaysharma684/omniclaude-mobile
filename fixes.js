@@ -222,7 +222,7 @@
       if (tabs && tabs.parentElement) tabs.parentElement.className = 'grid grid-cols-1 gap-1.5 p-1 bg-ocBg rounded-xl border border-ocBorder';
     }
   });
-  /* ---------- 10. Diagnostics: show the provider's real error text ---------- */
+   /* ---------- 10. Diagnostics: show the provider's real error text ---------- */
   const _t2 = window.testSingleProviderKey;
   window.testSingleProviderKey = async function (pid) {
     await _t2(pid);
@@ -238,7 +238,16 @@
       const r = await fetch(prov.modelsEndpoint, { headers: { Authorization: 'Bearer ' + key } });
       const body = (await r.text()).replace(/\s+/g, ' ').slice(0, 220);
       info = 'Provider replied HTTP ' + r.status + ': ' + (body || '(empty body)');
-      if (r.status === 200) info = 'Key works for listing models (HTTP 200). The problem is the chat call — plan/model access.';
+      if (r.status === 200) {
+        const model = state.resolvedModels[pid] || (prov.candidateModels || [])[0] || prov.testModel;
+        const c = await fetch(prov.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+          body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], max_tokens: 16 })
+        });
+        const cb = (await c.text()).replace(/\s+/g, ' ').slice(0, 260);
+        info = 'Models list OK. Chat call (' + model + ') replied HTTP ' + c.status + ': ' + (cb || '(empty body)');
+      }
     } catch (e) {
       info = 'Could not reach provider: ' + e.message + ' (VPN, network or CORS block?)';
     }
