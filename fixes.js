@@ -1,4 +1,6 @@
 /* OmniClaude fixes.js — load AFTER the main inline <script>, just before </body>. */
+(function () {
+  'use strict';
 
   /* ---------- 0. Environment ---------- */
   const IS_APP = matchMedia('(display-mode: standalone)').matches ||
@@ -23,6 +25,7 @@
 
   /* ---------- 3. Friendly status messages + stall watchdog ---------- */
   function explain(s) {
+    if (s === 402) return 'billing problem on your provider account — check its billing page';
     if (s === 401 || s === 403) return 'API key rejected — check it in Settings';
     if (s === 404) return 'model unavailable on this provider';
     if (s === 413) return 'input too large — attach fewer or smaller files';
@@ -64,6 +67,17 @@
   window.renderMarkdown = function (raw) {
     if (typeof raw === 'string') raw = raw.replace(/- Verify your mobile internet connection\.\n?/g, '');
     return _render(raw);
+  };
+
+  // HTTP 402 = account billing block: explain it under the card
+  const _t402 = window.testSingleProviderKey;
+  window.testSingleProviderKey = async function (pid) {
+    await _t402(pid);
+    const badge = document.getElementById('prov-badge-' + pid);
+    if (badge && /402/.test(badge.textContent)) {
+      badge.textContent = '● Billing needed (402)';
+      showToast(PROVIDERS[pid].shortName + ': account billing is blocking requests. The app will use other providers.', 'error');
+    }
   };
 
   /* ---------- 4. Test Key: ask the provider for real model names first ---------- */
@@ -173,7 +187,7 @@
   window.exportBackupJson = function () {
     const withKeys = confirm('Include API keys in the file?\nThey are saved as plain text — anyone with the file can use them.');
     const payload = {
-      app: 'OmniClaude Mobile', exportedAt: new Date().toISOString(),
+      app: 'OmniCode', exportedAt: new Date().toISOString(),
       selectedModel: state.selectedModel, customModelId: state.customModelId,
       resolvedModels: state.resolvedModels, localEndpoint: state.localEndpoint
     };
