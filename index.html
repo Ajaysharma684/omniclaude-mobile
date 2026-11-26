@@ -223,7 +223,7 @@
           </svg>
         </div>
         <div>
-          <h2 class="font-semibold text-sm text-white leading-tight">OmniCode Mobile</h2>
+          <h2 class="font-semibold text-sm text-white leading-tight">OmniCode</h2>
           <p class="text-[11px] text-ocMuted">Smart Auto-Router Edition</p>
         </div>
       </div>
@@ -270,7 +270,7 @@
     </div>
   </aside>
 
-  <header class="shrink-0 h-14 px-2 sm:px-4 bg-ocBg/95 backdrop-blur-md border-b border-ocBorder flex items-center justify-between gap-1.5 z-30">
+ <header class="native-app-bar shrink-0 min-h-[56px] px-2 sm:px-4 flex items-center justify-between gap-1.5 z-30">
     <button onclick="toggleDrawer(true)" aria-label="Open Chat History" class="min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-ocMuted hover:text-white hover:bg-ocCard active:scale-95 transition shrink-0">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h11M4 18h16"></path>
@@ -364,7 +364,7 @@
           </svg>
         </div>
 
-        <h1 class="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1.5">OmniCode Mobile</h1>
+        <h1 class="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1.5">OmniCode</h1>
         <p class="text-xs sm:text-sm text-ocMuted max-w-md mb-5 leading-relaxed">
           <span class="text-ocAccent font-medium">✨ Smart Auto-Router</span> prioritizes your saved <span class="text-white">Groq</span> &amp; <span class="text-white">Google AI Studio</span> keys with instant failover across coding, exam numericals, screenshots, and multi-PDF study guides.
         </p>
@@ -409,8 +409,7 @@
     </div>
   </main>
 
-  <footer class="shrink-0 bg-ocBg border-t border-ocBorder px-2.5 sm:px-4 pt-2 pb-[max(0.65rem,env(safe-area-inset-bottom))] z-20">
-    <div class="max-w-3xl mx-auto">
+ <footer class="native-bottom-bar shrink-0 px-2.5 sm:px-4 pt-2 z-20">
 
       <div id="pdf-progress-container" class="hidden mb-2 p-2.5 rounded-2xl bg-ocCard border border-ocAccent/40 shadow-md">
         <div class="flex items-center justify-between gap-2 mb-1.5">
@@ -502,7 +501,7 @@
       <div class="px-4 py-3.5 border-b border-ocBorder flex items-center justify-between shrink-0">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-ocAccent"></span>
-          <h3 class="text-base font-semibold text-white">OmniCode Mobile Settings</h3>
+          <h3 class="text-base font-semibold text-white">OmniCode Settings</h3>
         </div>
         <button onclick="closeModal('settings-modal')" class="p-2 rounded-xl text-ocMuted hover:text-white hover:bg-ocElevated">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -886,12 +885,12 @@ omniroute &amp;</pre>
     };
 
     const SYSTEM_PROMPTS = {
-      code: `You are OmniCode Mobile in Code Agent mode — a senior full-stack and systems engineer.
+      code: `You are OmniCode in Code Agent mode — a senior full-stack and systems engineer.
 Rules:
 1. Deliver complete, runnable, clean code without placeholders.
 2. Wrap every file in a fenced Markdown code block (\`\`\`html, \`\`\`python, \`\`\`c, \`\`\`javascript, etc.) with the suggested filename on the first comment line.
 3. For web apps or UI requests, generate a single self-contained HTML file with inline CSS/JS so the user can launch it in the built-in Live Preview sandbox.`,
-      study: `You are OmniCode Mobile in Exam Study Guide mode — an expert university exam strategist & educator.
+      study: `You are OmniCode in Exam Study Guide mode — an expert university exam strategist & educator.
 When analyzing past question papers and syllabus units:
 1. Rank repeated topics by exact frequency across the uploaded papers (e.g. "MUST PREPARE — 8/10 papers", "VERY LIKELY — 5/10 papers", "GOOD TO PREPARE — 3/10 papers").
 2. Build a COMPLETE, self-contained, interactive dark-mode single-file HTML study guide (\`\`\`html) using warm dark colors (#141413 background, #1f1e1c cards, #2e2c29 borders, #d97757 terracotta accents) so the student can tap the "Live Preview" button on their phone.
@@ -900,7 +899,7 @@ When analyzing past question papers and syllabus units:
   - Color-coded frequency badges (e.g. "8/10 papers", "Must prepare", "Very likely").
   - Concise 2-mark definitions, complete C/Java/Python syntax blocks, diagrams, and step-by-step solved numericals.
 4. Ensure all JavaScript tab switching works cleanly on mobile touchscreens.`,
-      chat: `You are OmniCode Mobile, a clear, concise, and helpful AI assistant. Format answers cleanly with Markdown.`
+      chat: `You are OmniCode, a clear, concise, and helpful AI assistant. Format answers cleanly with Markdown.`
     };
 
    const STORAGE_KEY = 'omniclaude_autorouter_v4';
@@ -2712,7 +2711,7 @@ When analyzing past question papers and syllabus units:
 
     function exportBackupJson() {
       const payload = {
-        app: 'OmniCode Mobile (Auto-Router Edition)',
+        app: 'OmniCode (Auto-Router Edition)',
         exportedAt: new Date().toISOString(),
         selectedModel: state.selectedModel,
         customModelId: state.customModelId,
