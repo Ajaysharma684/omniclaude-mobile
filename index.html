@@ -2333,8 +2333,8 @@ omniroute &amp;</pre>
         modelsEndpoint: 'https://api.mistral.ai/v1/models',
         keyless: false,
         placeholder: 'Mistral API Key (from console.mistral.ai)',
-        testModel: 'ministral-8b-latest',
-        candidateModels: ['ministral-8b-latest', 'codestral-latest', 'ministral-14b-latest']
+        testModel: 'mistral-small-latest',
+        candidateModels: ['mistral-small-latest', 'ministral-8b-latest', 'codestral-latest', 'ministral-14b-latest']
       },
       pollinations: {
         id: 'pollinations',
@@ -4191,7 +4191,7 @@ When analyzing past question papers and syllabus units:
         }
         if (providerId === 'mistral') {
           const valid = ids.filter(id => !/embed/i.test(id));
-         return valid.find(id => /ministral|codestral/i.test(id)) || valid[0] || null;
+         return valid.find(id => /mistral-small/i.test(id)) || valid.find(id => /ministral|codestral/i.test(id)) || valid[0] || null;
         }
         return ids[0];
       } catch (_) {
