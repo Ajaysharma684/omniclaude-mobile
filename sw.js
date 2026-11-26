@@ -1,4 +1,4 @@
-const CACHE_NAME = 'omniclaude-v4';
+const CACHE_NAME = 'omniclaude-v5';
 const FILES = ['./', './index.html', './icon.png', './manifest.json', './fixes.js'];
 
 self.addEventListener('install', (e) => {
