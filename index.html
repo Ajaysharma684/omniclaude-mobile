@@ -877,7 +877,7 @@ When analyzing past question papers and syllabus units:
       chat: `You are OmniCode Mobile, a clear, concise, and helpful AI assistant. Format answers cleanly with Markdown.`
     };
 
-    const STORAGE_KEY = 'OmniCode_autorouter_v4';
+   const STORAGE_KEY = 'omniclaude_autorouter_v4';
 
     let state = {
       demoMode: false,
@@ -1201,7 +1201,7 @@ When analyzing past question papers and syllabus units:
 
       const inputEl = document.getElementById('chat-input');
    if (state.workspaceMode === 'study') {
-      inputEl.placeholder = 'Ask a study question or attach PDF...';
+      inputEl.placeholder = 'Ask or attach PDF...';
     } else if (state.workspaceMode === 'code') {
       inputEl.placeholder = 'Describe code to build or debug...';
     } else {
