@@ -1200,13 +1200,13 @@ When analyzing past question papers and syllabus units:
       });
 
       const inputEl = document.getElementById('chat-input');
-      if (state.workspaceMode === 'study') {
-        inputEl.placeholder = 'Attach past paper PDFs, ask a numerical, or build a study guide...';
-      } else if (state.workspaceMode === 'code') {
-        inputEl.placeholder = 'Describe the app or code you want to build or debug...';
-      } else {
-        inputEl.placeholder = 'Ask anything — Auto-Router picks the best model...';
-      }
+   if (state.workspaceMode === 'study') {
+      inputEl.placeholder = 'Ask a study question or attach PDF...';
+    } else if (state.workspaceMode === 'code') {
+      inputEl.placeholder = 'Describe code to build or debug...';
+    } else {
+      inputEl.placeholder = 'Ask OmniCode anything...';
+    }
 
       const dlDot = document.getElementById('demo-live-dot');
       const dlLabel = document.getElementById('demo-live-label');
