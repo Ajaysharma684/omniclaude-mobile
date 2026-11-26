@@ -1,5 +1,5 @@
 /* OmniClaude fixes.js — load AFTER the main inline <script>, just before </body>.
-   <script src="fixes.js"></script> */
+
 (function () {
   'use strict';
 
