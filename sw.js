@@ -1,4 +1,4 @@
-const CACHE_NAME = 'omnicode-fast-v5';
+const CACHE_NAME = 'omnicode-fast-v6';
 const CORE_ASSETS = [
   './',
   './index.html',
