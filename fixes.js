@@ -1,7 +1,4 @@
-/* OmniClaude fixes.js — load AFTER the main inline <script>, just before </body>.
-
-(function () {
-  'use strict';
+/* OmniClaude fixes.js — load AFTER the main inline <script>, just before </body>. */
 
   /* ---------- 0. Environment ---------- */
   const IS_APP = matchMedia('(display-mode: standalone)').matches ||
