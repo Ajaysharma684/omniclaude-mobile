@@ -1967,7 +1967,7 @@
   <div id="custom-model-bar" class="hidden shrink-0 px-3 py-2 bg-[#1a1917] border-b border-ocBorder">
     <div class="max-w-3xl mx-auto flex items-center gap-2">
       <span class="text-[11px] font-semibold text-ocAccent shrink-0">Custom ID:</span>
-      <input id="inline-custom-model-input" type="text" placeholder="e.g. openai/gpt-oss-120b or gemini-3-flash-preview" oninput="updateCustomModelId(this.value)" class="flex-1 min-w-0 bg-ocBg border border-ocBorder focus:border-ocAccent rounded-xl px-3 py-1.5 text-xs font-mono text-white placeholder-[#76736c] focus:outline-none">
+      <input id="inline-custom-model-input" type="text" placeholder="e.g. openai/gpt-oss-120b or gemini-3.8-flash" oninput="updateCustomModelId(this.value)" class="flex-1 min-w-0 bg-ocBg border border-ocBorder focus:border-ocAccent rounded-xl px-3 py-1.5 text-xs font-mono text-white placeholder-[#76736c] focus:outline-none">
       <button type="button" onclick="saveCustomModelToast()" class="px-3 py-1.5 rounded-xl bg-ocAccent hover:bg-ocAccentHover text-[#141413] text-xs font-semibold shrink-0 transition">
         Apply
       </button>
@@ -2322,8 +2322,8 @@ omniroute &amp;</pre>
         modelsEndpoint: 'https://generativelanguage.googleapis.com/v1beta/openai/models',
         keyless: false,
         placeholder: 'AIza... (from aistudio.google.com)',
-        testModel: 'gemini-3-flash-preview',
-        candidateModels: ['gemini-3-flash-preview', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash']
+        testModel: 'gemini-3.8-flash',
+        candidateModels: ['gemini-3.8-flash', 'gemini-3-flash-preview', 'gemini-3.5-flash-lite', 'gemini-2.5-flash']
       },
       openrouter: {
         id: 'openrouter',
@@ -2366,16 +2366,17 @@ omniroute &amp;</pre>
         useResolved: true,
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-20b', displayName: 'Groq GPT-OSS 20B' },
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'google-gemini': {
         displayName: 'Google Gemini Flash',
         provider: 'google',
-        apiModel: 'gemini-3-flash-preview',
+        apiModel: 'gemini-3.8-flash',
         useResolved: true,
         fallbacks: [
+          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Gemini 3 Flash' },
           { provider: 'google', apiModel: 'gemini-3.5-flash-lite', displayName: 'Gemini 3.5 Flash Lite' },
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
@@ -2396,7 +2397,7 @@ omniroute &amp;</pre>
         apiModel: 'qwen-coder-large',
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
@@ -2412,7 +2413,7 @@ omniroute &amp;</pre>
       'gemini-large': {
         displayName: 'Gemini Large',
         provider: 'google',
-        apiModel: 'gemini-3-flash-preview',
+        apiModel: 'gemini-3.8-flash',
         useResolved: true,
         fallbacks: [
           { provider: 'pollinations', apiModel: 'gemini-large', displayName: 'Gemini Large (Pollinations)' },
@@ -2426,14 +2427,14 @@ omniroute &amp;</pre>
         apiModel: 'deepseek',
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
       'qwen-vision': {
         displayName: 'Qwen Vision',
         provider: 'google',
-        apiModel: 'gemini-3-flash-preview',
+        apiModel: 'gemini-3.8-flash',
         useResolved: true,
         fallbacks: [
           { provider: 'pollinations', apiModel: 'qwen-vision', displayName: 'Qwen Vision' },
@@ -2445,7 +2446,7 @@ omniroute &amp;</pre>
         provider: 'pollinations',
         apiModel: 'gemini-search',
         fallbacks: [
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
@@ -2456,7 +2457,7 @@ omniroute &amp;</pre>
         apiModel: 'openai-large',
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
@@ -2484,7 +2485,7 @@ omniroute &amp;</pre>
         apiModel: 'claude-3-5-sonnet-latest',
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
@@ -2503,7 +2504,7 @@ omniroute &amp;</pre>
         apiModel: 'deepseek-r1',
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
-          { provider: 'google', apiModel: 'gemini-3-flash-preview', displayName: 'Google Gemini', useResolved: true },
+          { provider: 'google', apiModel: 'gemini-3.8-flash', displayName: 'Google Gemini', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
@@ -2588,6 +2589,8 @@ When analyzing past question papers and syllabus units:
     }
 
     function resolveProviderModel(providerId, fallbackModel) {
+      // Always try the newest Google model first; older ones are backups in the route
+      if (providerId === 'google') return 'gemini-3.8-flash';
       return state.resolvedModels[providerId] || fallbackModel || PROVIDERS[providerId]?.testModel || 'openai';
     }
 
@@ -2599,7 +2602,7 @@ When analyzing past question papers and syllabus units:
 
       const pushGoogle = () => {
         if (!hasGoogle) return;
-        const primary = resolveProviderModel('google', 'gemini-3-flash-preview');
+        const primary = resolveProviderModel('google', 'gemini-3.8-flash');
         list.push({ provider: 'google', apiModel: primary, displayName: `Google AI (${primary})`, useResolved: true });
         PROVIDERS.google.candidateModels.forEach(m => {
           if (m !== primary) list.push({ provider: 'google', apiModel: m, displayName: `Google AI (${m})` });
