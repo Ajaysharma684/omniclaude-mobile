@@ -1,0 +1,59 @@
+/* Styles for features.js, including the light theme. */
+#fx-exam{display:none;gap:6px;overflow-x:auto;margin-bottom:8px;scrollbar-width:none}
+#fx-exam.on{display:flex}
+#fx-exam button{flex-shrink:0;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid rgba(59,130,246,.45);background:rgba(59,130,246,.14);color:#60a5fa;font-size:12px;font-weight:600}
+
+#fx-mic{display:flex;align-items:center;justify-content:center;flex-shrink:0;min-width:40px;min-height:42px;border-radius:12px;color:var(--color-ocMuted)}
+#fx-mic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#fx-mic.on{background:rgba(239,68,68,.18);color:#ef4444;animation:fx-pulse 1s ease-in-out infinite alternate}
+@keyframes fx-pulse{to{opacity:.55}}
+
+.fx-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fx-actions button{min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--color-ocBorder);background:var(--color-ocCard);color:var(--color-ocMuted);font-size:12px;font-weight:600}
+
+#fx-search{margin:0 12px 6px;padding:9px 12px;border-radius:12px;border:1px solid var(--color-ocBorder);background:var(--color-ocBg);color:var(--color-ocText);font-size:13px;outline:none}
+#fx-search:focus{border-color:var(--color-ocAccent)}
+#fx-none{display:none;padding:12px 16px;font-size:12px;color:var(--color-ocMuted)}
+
+#fx-prefs label{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;font-size:13px;font-weight:600;color:var(--color-ocText)}
+#fx-prefs input{width:22px;height:22px;accent-color:#3b82f6}
+#fx-prefs select{padding:7px 10px;border-radius:10px;border:1px solid var(--color-ocBorder);background:var(--color-ocCard);color:var(--color-ocText);font-size:12px}
+
+/* ---------- Light theme ---------- */
+html.light{
+  color-scheme:light;
+  --app-bg:#f6f5f1;--app-text:#1c1b19;--app-border:rgba(0,0,0,.1);
+  --color-ocBg:#f6f5f1;--color-ocCard:#ffffff;--color-ocElevated:#ecebe5;--color-ocBorder:#dbd9d1;
+  --color-ocAccent:#2563eb;--color-ocAccentHover:#1d4ed8;--color-ocText:#1c1b19;--color-ocMuted:#5f5c55;
+}
+html.light body{background-color:#f6f5f1!important;color:#1c1b19!important}
+html.light .native-app-bar,html.light .native-bottom-bar{background-color:rgba(246,245,241,.96)}
+html.light .text-white{color:#1c1b19}
+html.light .text-ocText{color:#1c1b19}
+html.light .bg-ocAccent,html.light .bg-ocAccent .text-white{color:#fff}
+html.light .bg-ocAccent[class*="text-"]{color:#fff}
+html.light .bg-red-500.text-white{color:#fff}
+html.light [class*="bg-[#35342f]"]:hover,html.light [class*="bg-[#34332e]"]:hover{background-color:#e2e0d9}
+html.light [class*="bg-[#191816]"],html.light [class*="bg-[#1a1917]"]{background-color:#f1f0ea}
+html.light .md-prose p,html.light .md-prose h1,html.light .md-prose h2,html.light .md-prose h3,html.light .md-prose strong{color:#1c1b19}
+html.light .md-prose blockquote{color:#4b4943}
+html.light .md-prose a{color:#1d4ed8}
+html.light .md-prose code.inline-code{background:#e9eefb;color:#1d4ed8;border-color:#d3ddf5}
+html.light .text-emerald-300,html.light .text-emerald-400{color:#047857}
+html.light .text-amber-300{color:#92400e}
+html.light .text-red-400,html.light .text-red-200{color:#b91c1c}
+html.light .text-indigo-300{color:#4338ca}
+html.light [class*="bg-red-950"]{background-color:#fee2e2}
+html.light #app-nav{background:#fff;border-top-color:#dbd9d1}
+html.light #app-nav button{color:#5f5c55}
+html.light #app-nav button.on{color:#1c1b19}
+html.light #app-nav button.on .pill{background:rgba(37,99,235,.15);color:#1d4ed8}
+html.light #fx-exam button{color:#1d4ed8}
+/* Code blocks stay dark in the light theme */
+html.light [class*="bg-[#0e0e0d]"]{
+  --color-ocBg:#141413;--color-ocCard:#1f1e1c;--color-ocElevated:#292825;--color-ocBorder:#2e2c29;
+  --color-ocAccent:#3b82f6;--color-ocText:#f2f0ea;--color-ocMuted:#9c988f;color:#e5e7eb
+}
+html.light [class*="bg-[#0e0e0d]"] [class*="bg-[#1a1917]"]{background-color:#1a1917}
+html.light [class*="bg-[#0e0e0d]"] .text-white{color:#fff}
+html.light [class*="bg-[#0e0e0d]"] .text-ocText{color:#f2f0ea}
