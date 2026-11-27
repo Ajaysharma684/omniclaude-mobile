@@ -4166,11 +4166,12 @@ When analyzing past question papers and syllabus units:
             </div>
             ${urlField}
             <div class="flex gap-2">
-              <input id="prov-key-${pid}" type="password" value="${escapeHtml(state.keys[pid] || '')}" placeholder="${escapeHtml(prov.placeholder)}" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent" />
+              <input id="prov-key-${pid}" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" style="-webkit-text-security:disc" value="${escapeHtml(state.keys[pid] || '')}" placeholder="${escapeHtml(prov.placeholder)}" class="flex-1 min-w-0 bg-ocCard border border-ocBorder rounded-xl px-3 py-2 text-xs font-mono text-white placeholder-[#666] focus:outline-none focus:border-ocAccent" />
               <button type="button" onclick="testSingleProviderKey('${pid}')" class="px-3 py-2 rounded-xl bg-ocElevated hover:bg-[#35342f] border border-ocBorder text-xs font-semibold text-white shrink-0 transition">
                 Test Key
               </button>
             </div>
+            ${state.keys[pid] ? `<button type="button" onclick="removeKey('${pid}')" class="mt-2 min-h-[32px] text-[11px] font-semibold text-red-400 underline">Remove saved key</button>` : ''}
           </div>
         `;
       }).join('');
@@ -4328,10 +4329,38 @@ When analyzing past question papers and syllabus units:
       }
     }
 
+    function forgetKeyStatus(pid) {
+      delete state.providerHealth[pid];
+      delete state.resolvedModels[pid];
+    }
+
+    function removeKey(pid) {
+      if (!confirm('Remove this saved API key?')) return;
+      state.keys[pid] = '';
+      forgetKeyStatus(pid);
+      saveState();
+      // keep anything typed but not yet saved in the other boxes
+      const typed = {};
+      Object.keys(PROVIDERS).forEach(p => {
+        const el = document.getElementById(`prov-key-${p}`);
+        if (el && p !== pid) typed[p] = el.value;
+      });
+      renderProviderCards();
+      Object.entries(typed).forEach(([p, v]) => {
+        const el = document.getElementById(`prov-key-${p}`);
+        if (el) el.value = v;
+      });
+      showToast('Key removed', 'info');
+    }
+
     function saveAllSettings() {
       Object.keys(PROVIDERS).forEach(pid => {
         const el = document.getElementById(`prov-key-${pid}`);
-        if (el) state.keys[pid] = normalizeApiKey(pid, el.value);
+        if (!el) return;
+        const key = normalizeApiKey(pid, el.value);
+        // A changed or removed key must not keep the old badge and model
+        if (key !== (state.keys[pid] || '') || !key) forgetKeyStatus(pid);
+        state.keys[pid] = key;
       });
       const localUrlEl = document.getElementById('local-endpoint-input');
       if (localUrlEl) {
