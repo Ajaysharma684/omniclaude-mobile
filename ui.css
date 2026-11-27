@@ -1,0 +1,31 @@
+/* App-style UI layer. Remove ui.css and ui.js to undo. */
+body{-webkit-tap-highlight-color:transparent}
+header,footer,#app-nav,button{user-select:none}
+.ui-modebar-hidden{display:none!important}
+
+#app-nav{display:grid;grid-template-columns:repeat(5,1fr);background:#1b1a19;border-top:1px solid #2e2c29;padding:6px 4px calc(6px + env(safe-area-inset-bottom));flex-shrink:0;z-index:20}
+#app-nav button{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:52px;font-size:11px;font-weight:600;color:#9c988f}
+#app-nav .pill{display:flex;align-items:center;justify-content:center;width:56px;height:30px;border-radius:999px;transition:background .25s,color .25s}
+#app-nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#app-nav button.on{color:#f2f0ea}
+#app-nav button.on .pill{background:rgba(59,130,246,.25);color:#60a5fa}
+.native-bottom-bar{padding-bottom:8px!important}
+body.ui-typing #app-nav{display:none}
+
+button{transition:transform .12s,background-color .2s,color .2s}
+button:active{transform:scale(.96)}
+#empty-state button{border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#empty-state>*{animation:ui-rise .4s ease both}
+#empty-state>*:nth-child(2){animation-delay:.05s}
+#empty-state>*:nth-child(3){animation-delay:.1s}
+#empty-state>*:nth-child(4){animation-delay:.15s}
+#messages-list>*:last-child{animation:ui-rise .25s ease}
+#settings-modal:not(.hidden)>*,#inspect-modal:not(.hidden)>*,#paste-snippet-modal:not(.hidden)>*{animation:ui-sheet .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes ui-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes ui-sheet{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Store-style cleanup: no self-download screens, one-line input hint */
+#tab-btn-setup,button[onclick*="openSettingsModal('setup')"]{display:none!important}
+div:has(>#tab-btn-setup){grid-template-columns:1fr!important}
+#chat-input::placeholder{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
