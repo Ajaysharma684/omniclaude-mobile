@@ -1928,7 +1928,7 @@
         <option value="auto">✨ Smart Auto-Router (Auto-Picks Best Model per Prompt)</option>
         <option value="groq-fast">Groq Cloud (Ultra-Fast LPU — Uses Saved Groq Key)</option>
         <option value="google-gemini">Google Gemini Flash (1M Context &amp; Vision — Uses Google Key)</option>
-        <option value="mistral-small">Mistral Small (Fast Lightweight Tasks — Uses Mistral Key)</option>
+        <option value="openrouter-free">OpenRouter Free (Uses OpenRouter Key)</option>
         <option value="qwen-coder-large">Qwen Coder Large (Heavy Coding, HTML Apps &amp; Debugging)</option>
         <option value="qwen-coder">Qwen Coder (Fast Coding &amp; Clean Syntax)</option>
         <option value="gemini-large">Gemini Large (1M Context, Multi-PDF Papers &amp; Syllabus)</option>
@@ -1937,7 +1937,6 @@
         <option value="gemini-search">Gemini Search (Live Web Search &amp; Latest Docs)</option>
         <option value="openai-large">OpenAI Large (Balanced Reasoning &amp; Explanations)</option>
         <option value="openai-fast">OpenAI Fast (Instant Replies &amp; Short Definitions)</option>
-        <option value="mistral-large">Mistral Large (Structured Study Notes &amp; Multilingual)</option>
         <option value="grok-large">Grok Large (Direct Answers &amp; Technical Problem Solving)</option>
         <option value="claude-sonnet">Claude Sonnet (Via Custom/OmniRoute Key)</option>
         <option value="claude-haiku">Claude Haiku (Via Custom/OmniRoute Key)</option>
@@ -2326,16 +2325,15 @@ omniroute &amp;</pre>
         testModel: 'gemini-3-flash-preview',
         candidateModels: ['gemini-3-flash-preview', 'gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash']
       },
-      mistral: {
-        id: 'mistral',
-        name: 'Mistral AI (Ministral & Codestral)',
-        shortName: 'Mistral',
-        endpoint: 'https://api.mistral.ai/v1/chat/completions',
-        modelsEndpoint: 'https://api.mistral.ai/v1/models',
+      openrouter: {
+        id: 'openrouter',
+        name: 'OpenRouter (Free Models)',
+        shortName: 'OpenRouter',
+        endpoint: 'https://openrouter.ai/api/v1/chat/completions',
         keyless: false,
-        placeholder: 'Mistral API Key (from console.mistral.ai)',
-        testModel: 'mistral-small-latest',
-        candidateModels: ['mistral-small-latest', 'ministral-8b-latest', 'codestral-latest', 'ministral-14b-latest']
+        placeholder: 'sk-or-... (from openrouter.ai/keys)',
+        testModel: 'openrouter/free',
+        candidateModels: ['openrouter/free']
       },
       pollinations: {
         id: 'pollinations',
@@ -2383,11 +2381,10 @@ omniroute &amp;</pre>
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
-      'mistral-small': {
-        displayName: 'Mistral Small',
-        provider: 'mistral',
-        apiModel: 'mistral-small-latest',
-        useResolved: true,
+      'openrouter-free': {
+        displayName: 'OpenRouter Free',
+        provider: 'openrouter',
+        apiModel: 'openrouter/free',
         fallbacks: [
           { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true },
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
@@ -2472,15 +2469,6 @@ omniroute &amp;</pre>
           { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
         ]
       },
-      'mistral-large': {
-        displayName: 'Mistral Large',
-        provider: 'mistral',
-        apiModel: 'mistral-large-latest',
-        fallbacks: [
-          { provider: 'pollinations', apiModel: 'mistral-large', displayName: 'Mistral Large (Backup)' },
-          { provider: 'groq', apiModel: 'openai/gpt-oss-120b', displayName: 'Groq Cloud', useResolved: true }
-        ]
-      },
       'grok-large': {
         displayName: 'Grok Large',
         provider: 'pollinations',
@@ -2559,13 +2547,13 @@ When analyzing past question papers and syllabus units:
         pollinations: '',
         google: '',
         groq: '',
-        mistral: '',
+        openrouter: '',
         local: ''
       },
       resolvedModels: {
         groq: '',
         google: '',
-        mistral: '',
+        openrouter: '',
         pollinations: '',
         local: ''
       },
@@ -2574,7 +2562,7 @@ When analyzing past question papers and syllabus units:
         pollinations: 'ready',
         google: 'untested',
         groq: 'untested',
-        mistral: 'untested',
+        openrouter: 'untested',
         local: 'untested'
       },
       sessions: [],
@@ -2606,7 +2594,7 @@ When analyzing past question papers and syllabus units:
     function buildKeyedBackupTail(preferGoogleFirst = false) {
       const hasGoogle = Boolean((state.keys.google || '').trim());
       const hasGroq = Boolean((state.keys.groq || '').trim());
-      const hasMistral = Boolean((state.keys.mistral || '').trim());
+      const hasOpenRouter = Boolean((state.keys.openrouter || '').trim());
       const list = [];
 
       const pushGoogle = () => {
@@ -2635,9 +2623,8 @@ When analyzing past question papers and syllabus units:
         pushGoogle();
       }
 
-      if (hasMistral) {
-       const primary = resolveProviderModel('mistral', 'ministral-8b-latest');
-        list.push({ provider: 'mistral', apiModel: primary, displayName: `Mistral (${primary})`, useResolved: true });
+      if (hasOpenRouter) {
+        list.push({ provider: 'openrouter', apiModel: 'openrouter/free', displayName: 'OpenRouter Free' });
       }
 
       return list;
@@ -4140,7 +4127,7 @@ When analyzing past question papers and syllabus units:
 
     function renderProviderCards() {
       const container = document.getElementById('provider-cards-list');
-      const order = ['groq', 'google', 'mistral', 'pollinations', 'local'];
+      const order = ['groq', 'google', 'openrouter', 'pollinations', 'local'];
 
       container.innerHTML = order.map(pid => {
         const prov = PROVIDERS[pid];
@@ -4196,10 +4183,6 @@ When analyzing past question papers and syllabus units:
         if (providerId === 'groq') {
           const valid = ids.filter(id => !/(whisper|tts|guard|embed|playai|orpheus)/i.test(id));
           return valid.find(id => /gpt-oss|llama|qwen/i.test(id)) || valid[0] || null;
-        }
-        if (providerId === 'mistral') {
-          const valid = ids.filter(id => !/embed/i.test(id));
-         return valid.find(id => /mistral-small/i.test(id)) || valid.find(id => /ministral|codestral/i.test(id)) || valid[0] || null;
         }
         return ids[0];
       } catch (_) {

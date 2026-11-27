@@ -231,7 +231,7 @@
     if (tab) {
       const n = document.createElement('div');
       n.className = 'p-3 rounded-2xl bg-ocBg border border-ocBorder text-[11px] text-ocMuted leading-relaxed';
-      n.innerHTML = '<b class="text-white">Privacy:</b> your messages and attached files are sent to the AI provider that answers (Pollinations, Google AI Studio, Groq or Mistral, depending on routing and your keys). Don\'t send anything you wouldn\'t share with them. Keys are stored only on this device.<br><br><b class="text-white">Unofficial app.</b> Not affiliated with or endorsed by Anthropic.';
+      n.innerHTML = '<b class="text-white">Privacy:</b> your messages and attached files are sent to the AI provider that answers (Pollinations, Google AI Studio, Groq or OpenRouter, depending on routing and your keys). Don\'t send anything you wouldn\'t share with them. Keys are stored only on this device.<br><br><b class="text-white">Unofficial app.</b> Not affiliated with or endorsed by Anthropic.';
       tab.insertBefore(n, tab.firstChild);
     }
 
