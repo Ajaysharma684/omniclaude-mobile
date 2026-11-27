@@ -3405,6 +3405,19 @@ When analyzing past question papers and syllabus units:
 
       if (state.selectedModel === 'custom') {
         const rawCustom = (state.customModelId || 'openai/gpt-oss-120b').trim();
+        // OpenRouter free models (IDs ending in ":free") go straight to OpenRouter.
+        // Backups keep their own names so the label shows who really answered.
+        if (/(:free|^openrouter\/free)$/i.test(rawCustom)) {
+          return {
+            isAutoRouted: false,
+            intentReason: 'Custom OpenRouter Free Model',
+            chain: dedupeCandidates([
+              { provider: 'openrouter', apiModel: rawCustom, displayName: rawCustom },
+              ...buildKeyedBackupTail(false),
+              { provider: 'pollinations', apiModel: 'openai', displayName: 'OpenAI (Backup)' }
+            ])
+          };
+        }
         const chain = [];
         if ((state.keys.groq || '').trim()) {
           chain.push({ provider: 'groq', apiModel: rawCustom, displayName: rawCustom });
