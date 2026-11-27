@@ -1,10 +1,12 @@
-const CACHE_NAME = 'omnicode-fast-v7';
+const CACHE_NAME = 'omnicode-fast-v8';
 const CORE_ASSETS = [
   './',
   './index.html',
   './fixes.js',
   './manifest.json',
   './icon.png',
+  './ui.css',
+  './ui.js',
   './icon-192.png'
 ];
 
