@@ -33,10 +33,16 @@
     if (s >= 500) return 'provider server error';
     return 'HTTP ' + s;
   }
+  const hungProviders = new WeakMap();
   const STALL_MS = 25000;
   const _stream = window.streamFromProvider;
   window.streamFromProvider = async function (session, idx, pid, model, userSignal) {
     const name = PROVIDERS[pid] ? PROVIDERS[pid].shortName : pid;
+    // A provider that already hung for this message is not retried with its other models
+    const hung = hungProviders.get(userSignal) || new Set();
+    hungProviders.set(userSignal, hung);
+    if (hung.has(pid)) throw new Error(name + ': not responding. Check your internet or try again in a minute');
+    const started = Date.now();
     const c = new AbortController();
     let stalled = false;
     const fwd = () => c.abort();
@@ -52,6 +58,8 @@
       return await _stream(session, idx, pid, model, c.signal);
     } catch (e) {
       if (userSignal.aborted) throw e;
+      // Either our stall timer or the app's own connect timeout (a failure after 10s or more)
+      if (stalled || Date.now() - started >= 10000) hung.add(pid);
       if (stalled) throw new Error(name + ': no response for ' + (STALL_MS / 1000) + 's');
       const m = /HTTP (\d{3})/.exec((e && e.message) || '');
       if (m) throw new Error(name + ': ' + (pid === 'pollinations' && [401, 402, 403].includes(+m[1])
