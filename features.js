@@ -37,6 +37,32 @@
     $('fx-lang').onchange = e => pref.set('omnicode_voice_lang', e.target.value);
   }
 
+  /* ---------- Send a long instruction but show a short message in the chat ---------- */
+  window.omniAsk = function (short, full, useAttachments) {
+    if (runtime.isGenerating) return showToast('Wait for the current answer to finish', 'info');
+    const typed = input.value;
+    const files = runtime.attachments;
+    // Follow-up taps must not swallow files or text the user is still preparing
+    if (!useAttachments) runtime.attachments = [];
+    const session = getActiveSession();
+    const before = session.messages.length;
+    const untitled = before === 0;
+    input.value = full;
+    handleSendOrStop(); // everything up to the network request runs right away
+    if (!useAttachments) {
+      runtime.attachments = files;
+      renderAttachmentsStrip();
+      input.value = typed;
+    }
+    const sent = session.messages[before];
+    if (!sent) return;
+    sent.display = short;
+    if (untitled) session.title = short.slice(0, 38);
+    saveState();
+    renderSessionsDrawer();
+    renderActiveSession();
+  };
+
   /* ---------- Exam mode ---------- */
   const PLAIN = ' Answer in simple Markdown text, not HTML.';
   const EXAM = [
@@ -61,8 +87,8 @@
       }
       const about = topic ? 'Topic: ' + topic
         : runtime.attachments.length ? 'Use the attached material.' : 'Use the topic and material above.';
-      input.value = `${label}. ${about}\n${task}${PLAIN}`;
-      handleSendOrStop();
+      const short = topic ? `${label}: ${topic}` : label;
+      window.omniAsk(short, `${label}. ${about}\n${task}${PLAIN}`, true);
     };
     bar.appendChild(b);
   });

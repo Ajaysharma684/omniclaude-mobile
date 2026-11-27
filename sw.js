@@ -1,4 +1,4 @@
-const CACHE_NAME = 'omnicode-fast-v15';
+const CACHE_NAME = 'omnicode-fast-v16';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,9 @@ const CORE_ASSETS = [
   './ui.js',
   './icon-192.png',
   './features.css',
-  './features.js'
+  './features.js',
+  './pro.css',
+  './pro.js'
 ];
 
 const CACHEABLE_CDN_HOSTS = [

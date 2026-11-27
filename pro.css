@@ -1,0 +1,53 @@
+/* Styles for pro.js */
+/* Less crowded bottom: the model menu at the top already covers the routing bar */
+#live-routing-bar{display:none!important}
+footer{position:relative}
+
+.pro-model{max-width:75vw;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11px;font-weight:600;color:var(--color-ocMuted)}
+.pro-tag{font-size:10px;font-weight:600;padding:0 6px;border-radius:6px;border:1px solid var(--color-ocBorder);color:var(--color-ocMuted)}
+
+.pro-home{width:100%;max-width:520px}
+.pro-home h1{font-size:24px;font-weight:700;color:var(--color-ocText)}
+.pro-home p{font-size:14px;color:var(--color-ocMuted);margin:4px 0 20px}
+.pro-home>div{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left}
+.pro-home button{display:flex;flex-direction:column;gap:4px;min-height:118px;padding:16px;border-radius:20px;background:var(--color-ocCard);border:1px solid var(--color-ocBorder);animation:pro-in .35s ease both}
+.pro-home button:nth-child(2){animation-delay:.05s}
+.pro-home button:nth-child(3){animation-delay:.1s}
+.pro-home button:nth-child(4){animation-delay:.15s}
+.pro-home svg{width:26px;height:26px;margin-bottom:8px;fill:none;stroke:var(--color-ocAccent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pro-home b{font-size:14px;color:var(--color-ocText)}
+.pro-home small{font-size:11px;color:var(--color-ocMuted)}
+
+.pro-follow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;animation:pro-in .3s ease}
+.pro-follow button{min-height:34px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--color-ocAccent);border:1px solid color-mix(in srgb,var(--color-ocAccent) 45%,transparent);background:color-mix(in srgb,var(--color-ocAccent) 12%,transparent)}
+
+.pro-dots{display:inline-flex;gap:5px;padding:8px 2px}
+.pro-dots i{width:7px;height:7px;border-radius:50%;background:var(--color-ocAccent);animation:pro-dot 1s ease-in-out infinite}
+.pro-dots i:nth-child(2){animation-delay:.15s}
+.pro-dots i:nth-child(3){animation-delay:.3s}
+
+#pro-down{position:absolute;right:14px;bottom:calc(100% + 10px);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--color-ocElevated);border:1px solid var(--color-ocBorder);color:var(--color-ocText);box-shadow:0 4px 14px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s}
+#pro-down.on{opacity:1;pointer-events:auto}
+#pro-down svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.pro-swap{animation:pro-in .25s ease}
+#fx-exam.on{animation:pro-in .25s ease}
+@keyframes pro-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pro-dot{0%,80%,100%{opacity:.3;transform:none}40%{opacity:1;transform:translateY(-5px)}}
+
+#pro-accents{display:flex;align-items:center;justify-content:space-between;min-height:44px;font-size:13px;font-weight:600;color:var(--color-ocText)}
+#pro-accents div{display:flex;gap:12px}
+#pro-accents button{width:30px;height:30px;border-radius:50%;border:2px solid transparent}
+#pro-accents button[aria-pressed="true"]{border-color:var(--color-ocText);box-shadow:inset 0 0 0 3px var(--color-ocCard)}
+#pro-accents [data-accent=blue]{background:#3b82f6}
+#pro-accents [data-accent=green]{background:#10b981}
+#pro-accents [data-accent=purple]{background:#8b5cf6}
+
+/* ---------- Accent colours ---------- */
+html[data-accent=green]{--color-ocAccent:#10b981;--color-ocAccentHover:#34d399;--app-accent:#10b981}
+html[data-accent=purple]{--color-ocAccent:#a78bfa;--color-ocAccentHover:#c4b5fd;--app-accent:#a78bfa}
+html.light[data-accent=green]{--color-ocAccent:#047857;--color-ocAccentHover:#065f46;--app-accent:#047857}
+html.light[data-accent=purple]{--color-ocAccent:#6d28d9;--color-ocAccentHover:#5b21b6;--app-accent:#6d28d9}
+html[data-accent] #app-nav button.on .pill{background:color-mix(in srgb,var(--color-ocAccent) 22%,transparent);color:var(--color-ocAccent)}
+html[data-accent] #fx-exam button{color:var(--color-ocAccent);border-color:color-mix(in srgb,var(--color-ocAccent) 45%,transparent);background:color-mix(in srgb,var(--color-ocAccent) 14%,transparent)}
+@media (prefers-reduced-motion:reduce){.pro-dots i{opacity:.8}}
