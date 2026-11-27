@@ -2809,6 +2809,12 @@ When analyzing past question papers and syllabus units:
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
+          // Drop damaged chats instead of breaking the app; keys are kept
+          if (parsed && 'sessions' in parsed) {
+            parsed.sessions = Array.isArray(parsed.sessions)
+              ? parsed.sessions.filter(s => s && s.id && Array.isArray(s.messages))
+              : [];
+          }
           state = {
             ...state,
             ...parsed,
@@ -4499,6 +4505,25 @@ When analyzing past question papers and syllabus units:
     }
 
     window.addEventListener('DOMContentLoaded', initApp);
+
+    // Another window of the app saved: adopt its data so this one can't overwrite it with stale values
+    window.addEventListener('storage', e => {
+      if (e.key !== STORAGE_KEY || !e.newValue) return;
+      try {
+        const next = JSON.parse(e.newValue);
+        if (runtime.isGenerating) {
+          // keep the chat that is streaming, take only the settings
+          delete next.sessions;
+          delete next.activeSessionId;
+        }
+        Object.assign(state, next);
+        syncAllUI();
+        if (!runtime.isGenerating) {
+          renderSessionsDrawer();
+          renderActiveSession();
+        }
+      } catch (_) {}
+    });
   </script>
   <script src="fixes.js"></script>
   <script src="ui.js"></script>

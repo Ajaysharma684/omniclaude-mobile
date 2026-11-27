@@ -54,7 +54,9 @@
       if (userSignal.aborted) throw e;
       if (stalled) throw new Error(name + ': no response for ' + (STALL_MS / 1000) + 's');
       const m = /HTTP (\d{3})/.exec((e && e.message) || '');
-      if (m) throw new Error(name + ': ' + explain(+m[1]));
+      if (m) throw new Error(name + ': ' + (pid === 'pollinations' && [401, 402, 403].includes(+m[1])
+        ? 'the free backup service refused the request — add a Groq or Google key in Settings'
+        : explain(+m[1])));
       throw e;
     } finally {
       clearInterval(timer);
