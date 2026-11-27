@@ -2314,7 +2314,7 @@ omniroute &amp;</pre>
         keyless: false,
         placeholder: 'gsk_... (from console.groq.com)',
         testModel: 'openai/gpt-oss-120b',
-        candidateModels: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant']
+        candidateModels: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b']
       },
       google: {
         id: 'google',
@@ -2815,6 +2815,8 @@ When analyzing past question papers and syllabus units:
             providerHealth: { ...state.providerHealth, ...(parsed.providerHealth || {}) }
           };
           state.keys.groq = normalizeApiKey('groq', state.keys.groq);
+          // Forget a remembered model that is no longer in the free list
+          if (/^llama-3\./.test(state.resolvedModels.groq || '')) state.resolvedModels.groq = '';
           if (location.protocol === 'https:' && /^http:\/\/localhost:20128/i.test(state.localEndpoint || '')) {
             state.localEndpoint = '';
           }
